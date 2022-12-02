@@ -15,7 +15,7 @@ resource "azurerm_subnet" "subnet" {
 }
 
 # Public IP
-resource "azurerm_public_ip" "publicip" {
+resource "azurerm_public_ip" "public_ip" {
   name                = "publicip"
   location            = vars.location
   resource_group_name = vars.resource_group

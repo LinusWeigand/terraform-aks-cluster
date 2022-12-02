@@ -17,57 +17,44 @@ resource "azurerm_application_gateway" "gateway" {
 
   gateway_ip_configuration {
     name      = "gateway-ip-configuration"
-    subnet_id = azurerm_subnet.north-subnet.id
+    subnet_id = azurerm_subnet.subnet.id
   }
 
   frontend_port {
-    name = "${azurerm_virtual_network.north-vnet.name}-feport"
+    name = "http"
     port = 80
   }
 
   frontend_ip_configuration {
-    name                 = "${azurerm_virtual_network.north-vnet.name}-feip"
-    public_ip_address_id = azurerm_public_ip.north-publicip.id
+    name                 = "vnet-feip"
+    public_ip_address_id = azurerm_public_ip.public_ip.id
   }
 
   backend_address_pool {
-    name  = "${azurerm_virtual_network.north-vnet.name}-beap"
-    fqdns = ["${azurerm_app_service.north-appservice.name}.azurewebsites.net"]
-  }
-
-  probe {
-    name                = "north-probe"
-    protocol            = "http"
-    path                = "/"
-    host                = "${azurerm_app_service.north-appservice.name}.azurewebsites.net"
-    interval            = "30"
-    timeout             = "30"
-    unhealthy_threshold = "3"
+    name  = "vnet-beap"
   }
 
   backend_http_settings {
-    name                                = "${azurerm_virtual_network.north-vnet.name}-be-htst"
+    name                                = "vnet-http-settings"
     cookie_based_affinity               = "Disabled"
     port                                = 80
     protocol                            = "Http"
-    request_timeout                     = 60
-    probe_name                          = "north-probe"
-    pick_host_name_from_backend_address = true
+    request_timeout                     = 1
   }
 
   http_listener {
-    name                           = "${azurerm_virtual_network.north-vnet.name}-httplstn"
-    frontend_ip_configuration_name = "${azurerm_virtual_network.north-vnet.name}-feip"
-    frontend_port_name             = "${azurerm_virtual_network.north-vnet.name}-feport"
+    name                           = "vnet-httplstn"
+    frontend_ip_configuration_name = "vnet-feip"
+    frontend_port_name             = "vnet-feport"
     protocol                       = "Http"
   }
 
   request_routing_rule {
-    name                       = "${azurerm_virtual_network.north-vnet.name}-rqrt"
+    name                       = "vnet-rqrt"
     rule_type                  = "Basic"
-    http_listener_name         = "${azurerm_virtual_network.north-vnet.name}-httplstn"
-    backend_address_pool_name  = "${azurerm_virtual_network.north-vnet.name}-beap"
-    backend_http_settings_name = "${azurerm_virtual_network.north-vnet.name}-be-htst"
+    http_listener_name         = "vnet-httplstn"
+    backend_address_pool_name  = "vnet-beap"
+    backend_http_settings_name = "vnet-be-htst"
   }
 
   tags = {

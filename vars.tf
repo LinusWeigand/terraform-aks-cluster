@@ -26,3 +26,19 @@ variable "resource_group" {
   description = "The name of the resource group in which the resources should be created."
   default     = "sandbox"
 }
+
+variable "environment" {
+  default = "Sandbox"
+}
+
+
+# AKS Cluster
+
+variable "agent_count" {
+  default = 3
+}
+
+variable "cluster_name" {
+
+}
+
