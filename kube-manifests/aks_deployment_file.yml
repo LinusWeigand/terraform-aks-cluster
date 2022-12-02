@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: keycloak187
+  namespace: default
+spec:
+  containers:
+    - name: keycloak187
+      image: acr187.azurecr.io/keycloak:v1
+      imagePullPolicy: IfNotPresent
+  imagePullSecrets:
+    - name: acr-secret

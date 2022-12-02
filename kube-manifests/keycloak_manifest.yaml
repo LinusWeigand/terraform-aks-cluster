@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak187-deployment
+spec:
+  selector:
+    matchLabels:
+      app: keycloak187
+  minReadySeconds: 5
+  template:
+    metadata:
+      labels:
+        app: keycloak187
+    spec:
+      containers:
+      - name: keycloak187
+        image: acr187.azurecr.io/keycloak:v1
+        ports:
+        - containerPort: 80
+#
+
