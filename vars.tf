@@ -33,12 +33,15 @@ variable "environment" {
 
 
 # AKS Cluster
-
 variable "agent_count" {
   default = 3
 }
 
 variable "cluster_name" {
+  default = "myaks"
+}
 
+variable "ssh_public_key" {
+  default = "~/.ssh/id_rsa.pub"
 }
 

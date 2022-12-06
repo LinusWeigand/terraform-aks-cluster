@@ -31,15 +31,16 @@ resource "azurerm_application_gateway" "gateway" {
   }
 
   backend_address_pool {
-    name  = "vnet-beap"
+    name = "vnet-beap"
   }
 
   backend_http_settings {
-    name                                = "vnet-http-settings"
-    cookie_based_affinity               = "Disabled"
-    port                                = 80
-    protocol                            = "Http"
-    request_timeout                     = 1
+    name                    = "vnet-http-settings"
+    cookie_based_affinity   = "Disabled"
+    port                    = 80
+    protocol                = "Http"
+    request_timeout         = 1
+    backend_address_pool_id = azurerm_kubernetes_cluster.myaks.id
   }
 
   http_listener {

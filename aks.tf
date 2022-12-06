@@ -1,17 +1,27 @@
-resoource "azurerm_kubernetes_cluster" "k8s" {
-  location            = azurerm_resource_group.rg.location
-  name                = var.cluster_name
-  resource_group_name = azurerm_resource_group.rg.name
-  dns_prefix          = var.dns_prefix
-  tags = {
-    Environment = vars.environment
-  }
+resource "azurerm_kubernetes_cluster" "myaks" {
+  name                    = var.cluster_name
+  location                = azurerm_resource_group.rg.location
+  resource_group_name     = azurerm_resource_group.rg.name
+  dns_prefix              = var.dns_prefix
+  private_cluster_enabled = true
+
 
   default_node_pool {
-    name       = "agentpool"
-    vm_size    = "Standard_D2_v2"
-    node_count = var.agent_count
+    name           = "system"
+    node_count     = var.node_count
+    vm_size        = "Standard_B2s"
+    vnet_subnet_id = azurerm_subnet.subnet.id
   }
+  network_profile {
+    network_plugin    = "azure"
+    network_policy    = "calico"
+    load_balancer_sku = "standard"
+  }
+  
+  identity {
+    type = "SystemAssigned"
+  }
+
   linux_profile {
     admin_username = "ubuntu"
 
