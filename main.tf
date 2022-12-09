@@ -1,4 +1,4 @@
-# Azure Provider source and version being used 
+# Provider source and version being used 
 terraform {
   required_providers {
     azurerm = {
@@ -15,7 +15,7 @@ terraform {
     }
   }
 }
-# Configure the Microsoft Azure Provider
+# Configure the Providers
 provider "azurerm" {
   features {}
   # docs: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs
@@ -27,10 +27,7 @@ provider "azurerm" {
 
 provider "kubernetes" {
   # docs: https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs
-  # host in KUBE_HOST
-  # client_certificate in KUBE_CLIENT_CERT_DATA
-  # client_key in KUBE_CLIENT_KEY_DATA
-  # cluster_ca_certificate in KUBE_CLUSTER_CA_CERT_DATA
+  # KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT will be set automatically
 }
 
 provider "keycloak" {

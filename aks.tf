@@ -1,7 +1,7 @@
 resource "azurerm_kubernetes_cluster" "myaks" {
   name                    = var.cluster_name
-  location                = azurerm_resource_group.rg.location
-  resource_group_name     = azurerm_resource_group.rg.name
+  location                = var.location
+  resource_group_name     = var.resource_group
   dns_prefix              = var.dns_prefix
   private_cluster_enabled = true
 
@@ -17,7 +17,7 @@ resource "azurerm_kubernetes_cluster" "myaks" {
     network_policy    = "calico"
     load_balancer_sku = "standard"
   }
-  
+
   identity {
     type = "SystemAssigned"
   }

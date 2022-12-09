@@ -1,7 +1,7 @@
 resource "azurerm_application_gateway" "gateway" {
   name                = "gateway"
-  location            = vars.location
-  resource_group_name = vars.resource_group
+  location            = var.location
+  resource_group_name = var.resource_group
   sku {
     name     = "WAF_Medium"
     tier     = "WAF"
@@ -35,13 +35,13 @@ resource "azurerm_application_gateway" "gateway" {
   }
 
   backend_http_settings {
-    name                    = "vnet-http-settings"
-    cookie_based_affinity   = "Disabled"
-    port                    = 80
-    protocol                = "Http"
-    request_timeout         = 1
-    backend_address_pool_id = azurerm_kubernetes_cluster.myaks.id
+    name                  = "vnet-http-settings"
+    cookie_based_affinity = "Disabled"
+    port                  = 80
+    protocol              = "Http"
+    request_timeout       = 1
   }
+  backend_address_pool_id = azurerm_kubernetes_cluster.myaks.id
 
   http_listener {
     name                           = "vnet-httplstn"
