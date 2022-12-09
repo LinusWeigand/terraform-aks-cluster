@@ -2,6 +2,7 @@ resource "azurerm_application_gateway" "gateway" {
   name                = "gateway"
   location            = var.location
   resource_group_name = var.resource_group
+
   sku {
     name     = "WAF_Medium"
     tier     = "WAF"
@@ -16,46 +17,45 @@ resource "azurerm_application_gateway" "gateway" {
   }
 
   gateway_ip_configuration {
-    name      = "gateway-ip-configuration"
+    name      = "gateway_ip_configuration"
     subnet_id = azurerm_subnet.subnet.id
   }
 
-  frontend_port {
-    name = "http"
-    port = 80
-  }
-
   frontend_ip_configuration {
-    name                 = "vnet-feip"
+    name                 = "gateway_frontend_ip_configuration"
     public_ip_address_id = azurerm_public_ip.public_ip.id
   }
 
+  frontend_port {
+    name = "https-frontend-port"
+    port = 443
+  }
+
   backend_address_pool {
-    name = "vnet-beap"
+    name = "gateway_backend_address_pool"
   }
 
   backend_http_settings {
-    name                  = "vnet-http-settings"
+    name                  = "gateway_backend_http_settings"
     cookie_based_affinity = "Disabled"
     port                  = 80
     protocol              = "Http"
-    request_timeout       = 1
+    request_timeout       = 30
   }
-  backend_address_pool_id = azurerm_kubernetes_cluster.myaks.id
 
   http_listener {
-    name                           = "vnet-httplstn"
-    frontend_ip_configuration_name = "vnet-feip"
-    frontend_port_name             = "vnet-feport"
-    protocol                       = "Http"
+    name                           = "gateway-http-listener"
+    frontend_ip_configuration_name = azurerm_application_gateway.gateway.frontend_ip_configuration.0.name
+    frontend_port_name             = azurerm_application_gateway.gateway.frontend_port.0.name
+    protocol                       = "Https"
   }
 
   request_routing_rule {
-    name                       = "vnet-rqrt"
+    name                       = "gateway-request-routing-rule"
     rule_type                  = "Basic"
-    http_listener_name         = "vnet-httplstn"
-    backend_address_pool_name  = "vnet-beap"
-    backend_http_settings_name = "vnet-be-htst"
+    http_listener_name         = azurerm_application_gateway.gateway.http_listener.0.name
+    backend_address_pool_name  = azurerm_application_gateway.gateway.backend_address_pool.0.name
+    backend_http_settings_name = azurerm_application_gateway.gateway.backend_http_settings.0.name
   }
 
   tags = {

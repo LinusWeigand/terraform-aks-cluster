@@ -34,3 +34,13 @@ variable "node_count" {
   default = 3
 }
 
+# Service Principal
+
+variable "client_id" {
+  type = string
+}
+
+variable "client_secret" {
+  type = string
+}
+
