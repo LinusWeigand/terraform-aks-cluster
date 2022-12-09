@@ -1,4 +1,4 @@
 resource "azurerm_resource_group" "aks-resources" {
-  name     = "sandbox"
+  name     = var.resource_group
   location = var.location
 }
