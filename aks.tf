@@ -13,10 +13,6 @@ resource "azurerm_kubernetes_cluster" "myaks" {
     vnet_subnet_id = azurerm_subnet.subnet.id
   }
 
-  identity {
-    type = "SystemAssigned"
-  }
-
   linux_profile {
     admin_username = "ubuntu"
 
@@ -29,7 +25,7 @@ resource "azurerm_kubernetes_cluster" "myaks" {
     load_balancer_sku = "standard"
   }
   service_principal {
-    client_id     = var.client_id
-    client_secret = var.client_secret
+    client_id     = var.CLIENT_ID
+    client_secret = var.CLIENT_SECRET
   }
 }

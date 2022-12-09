@@ -13,16 +13,25 @@ terraform {
       source  = "mrparkers/keycloak"
       version = "=4.1.0"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "=2.31.0"
+    }
   }
 }
 # Configure the Providers
+
 provider "azurerm" {
-  features {}
   # docs: https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs
   # client_id in ARM_CLIENT_ID 
   # client_secret in ARM_CLIENT_SECRET 
   # tenant_id in ARM_TENANT_ID 
   # subscription_id in ARM_SUBSCRIPTION_ID
+  client_id       = var.CLIENT_ID
+  client_secret   = var.CLIENT_SECRET
+  tenant_id       = var.TENANT_ID
+  subscription_id = var.SUBSCRIPTION_ID
+  features {}
 }
 
 provider "kubernetes" {

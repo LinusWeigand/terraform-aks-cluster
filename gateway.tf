@@ -22,21 +22,21 @@ resource "azurerm_application_gateway" "gateway" {
   }
 
   frontend_ip_configuration {
-    name                 = "gateway_frontend_ip_configuration"
+    name                 = local.frontend_ip_configuration_name
     public_ip_address_id = azurerm_public_ip.public_ip.id
   }
 
   frontend_port {
-    name = "https-frontend-port"
+    name = local.frontend_port_name
     port = 443
   }
 
   backend_address_pool {
-    name = "gateway_backend_address_pool"
+    name = local.backend_address_pool_name
   }
 
   backend_http_settings {
-    name                  = "gateway_backend_http_settings"
+    name                  = local.backend_http_settings_name
     cookie_based_affinity = "Disabled"
     port                  = 80
     protocol              = "Http"
@@ -44,21 +44,29 @@ resource "azurerm_application_gateway" "gateway" {
   }
 
   http_listener {
-    name                           = "gateway-http-listener"
-    frontend_ip_configuration_name = one(azurerm_application_gateway.gateway.frontend_ip_configuration[*].name)
-    frontend_port_name             = one(azurerm_application_gateway.gateway.frontend_port[*].name)
+    name                           = local.http_listener_name
+    frontend_ip_configuration_name = local.frontend_ip_configuration_name
+    frontend_port_name             = local.frontend_port_name
     protocol                       = "Https"
   }
 
   request_routing_rule {
     name                       = "gateway-request-routing-rule"
     rule_type                  = "Basic"
-    http_listener_name         = one(azurerm_application_gateway.gateway.http_listener[*].name)
-    backend_address_pool_name  = one(azurerm_application_gateway.gateway.backend_address_pool[*].name)
-    backend_http_settings_name = one(azurerm_application_gateway.gateway.backend_http_settings[*].name)
+    http_listener_name         = local.http_listener_name
+    backend_address_pool_name  = local.backend_address_pool_name
+    backend_http_settings_name = local.backend_http_settings_name
   }
 
   tags = {
     environment = var.environment
   }
+}
+
+locals {
+  frontend_ip_configuration_name = "gateway_frontend_ip_configuration"
+  frontend_port_name             = "https-frontend-port"
+  http_listener_name             = "gateway_http_listener"
+  backend_address_pool_name      = "gateway_backend_address_pool"
+  backend_http_settings_name     = "gateway_backend_http_settings"
 }

@@ -36,11 +36,19 @@ variable "node_count" {
 
 # Service Principal
 
-variable "client_id" {
+variable "CLIENT_ID" {
   type = string
 }
 
-variable "client_secret" {
+variable "CLIENT_SECRET" {
+  type = string
+}
+
+variable "SUBSCRIPTION_ID" {
+  type = string
+}
+
+variable "TENANT_ID" {
   type = string
 }
 
