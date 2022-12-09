@@ -26,3 +26,11 @@ variable "ssh_public_key" {
   default = "~/.ssh/id_rsa.pub"
 }
 
+variable "dns_prefix" {
+  default = "myaks"
+}
+
+variable "node_count" {
+  default = 3
+}
+
