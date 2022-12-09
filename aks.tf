@@ -12,11 +12,6 @@ resource "azurerm_kubernetes_cluster" "myaks" {
     vm_size        = "Standard_B2s"
     vnet_subnet_id = azurerm_subnet.subnet.id
   }
-  network_profile {
-    network_plugin    = "azure"
-    network_policy    = "calico"
-    load_balancer_sku = "standard"
-  }
 
   identity {
     type = "SystemAssigned"

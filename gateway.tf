@@ -13,7 +13,7 @@ resource "azurerm_application_gateway" "gateway" {
     enabled          = "true"
     firewall_mode    = "Detection"
     rule_set_type    = "OWASP"
-    rule_set_version = "3.0"
+    rule_set_version = "3.2"
   }
 
   gateway_ip_configuration {
@@ -45,17 +45,17 @@ resource "azurerm_application_gateway" "gateway" {
 
   http_listener {
     name                           = "gateway-http-listener"
-    frontend_ip_configuration_name = azurerm_application_gateway.gateway.frontend_ip_configuration.0.name
-    frontend_port_name             = azurerm_application_gateway.gateway.frontend_port.0.name
+    frontend_ip_configuration_name = one(azurerm_application_gateway.gateway.frontend_ip_configuration[*].name)
+    frontend_port_name             = one(azurerm_application_gateway.gateway.frontend_port[*].name)
     protocol                       = "Https"
   }
 
   request_routing_rule {
     name                       = "gateway-request-routing-rule"
     rule_type                  = "Basic"
-    http_listener_name         = azurerm_application_gateway.gateway.http_listener.0.name
-    backend_address_pool_name  = azurerm_application_gateway.gateway.backend_address_pool.0.name
-    backend_http_settings_name = azurerm_application_gateway.gateway.backend_http_settings.0.name
+    http_listener_name         = one(azurerm_application_gateway.gateway.http_listener[*].name)
+    backend_address_pool_name  = one(azurerm_application_gateway.gateway.backend_address_pool[*].name)
+    backend_http_settings_name = one(azurerm_application_gateway.gateway.backend_http_settings[*].name)
   }
 
   tags = {
