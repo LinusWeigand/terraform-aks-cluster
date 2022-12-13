@@ -9,10 +9,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "=2.16.1"
     }
-    keycloak = {
-      source  = "mrparkers/keycloak"
-      version = "=4.1.0"
-    }
+    # keycloak = {
+    #   source  = "mrparkers/keycloak"
+    #   version = "=4.1.0"
+    # }
     azuread = {
       source  = "hashicorp/azuread"
       version = "=2.31.0"
@@ -39,9 +39,9 @@ provider "kubernetes" {
   # KUBERNETES_SERVICE_HOST and KUBERNETES_SERVICE_PORT will be set automatically
 }
 
-provider "keycloak" {
-  # docs: https://registry.terraform.io/providers/mrparkers/keycloak/latest/docs
-  # client_id in KEYCLOAK_CLIENT_ID
-  # url in KEYCLOAK_URL
-  # client_secret in KEYCLOAK_CLIENT_SECRET
-}
+# provider "keycloak" {
+#   # docs: https://registry.terraform.io/providers/mrparkers/keycloak/latest/docs
+#   # client_id in KEYCLOAK_CLIENT_ID
+#   # url in KEYCLOAK_URL
+#   # client_secret in KEYCLOAK_CLIENT_SECRET
+# }
