@@ -31,7 +31,11 @@ provider "azurerm" {
   client_secret   = var.CLIENT_SECRET
   tenant_id       = var.TENANT_ID
   subscription_id = var.SUBSCRIPTION_ID
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
 }
 
 provider "kubernetes" {

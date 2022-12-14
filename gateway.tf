@@ -48,14 +48,14 @@ resource "azurerm_application_gateway" "gateway" {
     frontend_ip_configuration_name = local.frontend_ip_configuration_name
     frontend_port_name             = local.frontend_port_name
     protocol                       = "Https"
-    ssl_certificate_name           = local.ssl_certificate_name
+    # ssl_certificate_name           = local.ssl_certificate_name
   }
 
-  ssl_certificate {
-    name     = local.ssl_certificate_name
-    data     = filebase64("certs/cert.pem")
-    password = filebase64("certs/key.pem")
-  }
+  # ssl_certificate {
+  #   name     = local.ssl_certificate_name
+  #   data     = filebase64("certs/cert.pem")
+  #   password = filebase64("certs/key.pem")
+  # }
 
   request_routing_rule {
     name                       = "gateway-request-routing-rule"

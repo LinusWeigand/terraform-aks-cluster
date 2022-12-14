@@ -29,3 +29,5 @@ resource "azurerm_kubernetes_cluster" "myaks" {
     client_secret = var.CLIENT_SECRET
   }
 }
+
+# Byzantinische Fehler
