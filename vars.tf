@@ -15,7 +15,7 @@ variable "environment" {
 # Virtual Network
 variable "network_name" {
   default = "terraform_aks_dev_network"
-  type = string
+  type    = string
 }
 variable "network_cidr_block" {
   default = "10.0.0.0/16"
@@ -36,7 +36,7 @@ variable "ssh_public_key" {
 }
 
 variable "dns_prefix" {
-  default = "myaks"
+  default = "cloud"
 }
 
 variable "node_count" {
