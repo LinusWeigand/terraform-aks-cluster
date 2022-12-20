@@ -52,11 +52,11 @@ resource "kubernetes_deployment" "azure-vote-back" {
             value = "yes"
           }
           resources {
-            requests {
+            requests = {
               cpu    = "100m"
               memory = "128Mi"
             }
-            limits {
+            limits = {
               cpu    = "250m"
               memory = "256Mi"
             }
@@ -111,11 +111,11 @@ resource "kubernetes_deployment" "azure-vote-front" {
           name  = "azure-vote-front"
           image = "mcr.microsoft.com/azuredocs/azure-vote-front:v1"
           resources {
-            requests {
+            requests = {
               cpu    = "100m"
               memory = "128Mi"
             }
-            limits {
+            limits = {
               cpu    = "250m"
               memory = "256Mi"
             }
@@ -160,8 +160,7 @@ resource "kubernetes_ingress" "ingress" {
     rule {
       http {
         path {
-          path      = "/"
-          path_type = "Prefix"
+          path = "/"
           backend {
             service_name = kubernetes_service.azure-vote-front.metadata.0.name
             service_port = kubernetes_service.azure-vote-front.spec.0.port.0.target_port
