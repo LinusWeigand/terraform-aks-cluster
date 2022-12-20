@@ -17,12 +17,46 @@ variable "network_name" {
   default = "terraform_aks_dev_network"
   type    = string
 }
-variable "network_cidr_block" {
+
+# AKS Cluster
+variable "aks_service_principal_object_id" {
+  description = "Object ID of the service principal."
+}
+
+variable "virtual_network_address_prefix" {
+  description = "VNET address prefix"
+  default     = "192.168.0.0/16"
+}
+
+variable "aks_subnet_address_prefix" {
+  description = "Subnet address prefix."
+  default     = "192.168.0.0/24"
+}
+
+variable "app_gateway_subnet_address_prefix" {
+  description = "Subnet server IP address."
+  default     = "192.168.1.0/24"
+}
+
+variable "aks_service_cidr" {
   default = "10.0.0.0/16"
 }
 
+variable "aks_dns_service_ip" {
+  description = "DNS server IP address"
+  default     = "10.0.0.10"
+}
 
-# AKS Cluster
+variable "aks_docker_bridge_cidr" {
+  description = "CIDR notation IP for Docker bridge."
+  default     = "172.17.0.1/16"
+}
+
+variable "vm_user_name" {
+  description = "User name for the VM"
+  default     = "vmuser1"
+}
+
 variable "agent_count" {
   default = 3
 }
@@ -31,15 +65,23 @@ variable "cluster_name" {
   default = "myaks"
 }
 
-variable "ssh_public_key" {
+variable "public_ssh_key_path" {
   default = "~/.ssh/id_rsa.pub"
 }
 
-variable "dns_prefix" {
+variable "tags" {
+  type = map(string)
+
+  default = {
+    source = "terraform"
+  }
+}
+
+variable "aks_dns_prefix" {
   default = "cloud"
 }
 
-variable "node_count" {
+variable "aks_agent_count" {
   default = 3
 }
 
