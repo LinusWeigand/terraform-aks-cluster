@@ -28,7 +28,7 @@ resource "kubernetes_deployment" "azure-vote-back" {
     name = "azure-vote-back"
   }
   spec {
-    replicas = 1
+    replicas = 3
     selector {
       match_labels = {
         app = "azure-vote-back"
@@ -91,7 +91,7 @@ resource "kubernetes_deployment" "azure-vote-front" {
     name = "azure-vote-front"
   }
   spec {
-    replicas = 1
+    replicas = 3
     selector {
       match_labels = {
         app = "azure-vote-front"
