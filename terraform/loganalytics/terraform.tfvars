@@ -1,0 +1,2 @@
+name     = "linus"
+location = "germanywestcentral"
