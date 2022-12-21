@@ -11,3 +11,6 @@ az storage account create -n $STORAGE_ACCOUNT_NAME -g $RESOURCE_GROUP_NAME -l ge
 
 # Create Storage Account blob
 az storage container create  --name tfstate --account-name $STORAGE_ACCOUNT_NAME
+
+# List keys
+az storage account keys list --resource-group $RESOURCE_GROUP_NAME --account-name $STORAGE_ACCOUNT_NAME --output table
