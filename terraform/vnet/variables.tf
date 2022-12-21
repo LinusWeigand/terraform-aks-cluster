@@ -22,3 +22,9 @@ variable "subnet_address_prefix" {
   type        = string
   description = "Subnet Address Space"
 }
+
+variable "name" {
+}
+
+variable "location" {
+}

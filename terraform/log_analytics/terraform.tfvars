@@ -1,2 +1,0 @@
-name     = "linus"
-location = "germanywestcentral"

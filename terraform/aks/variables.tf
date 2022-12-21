@@ -16,3 +16,9 @@ variable "ssh_public_key" {
 
 variable "aks_admins_group_object_id" {
 }
+
+variable "name" {
+}
+
+variable "location" {
+}
