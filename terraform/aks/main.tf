@@ -1,28 +1,7 @@
-data "azurerm_resource_group" "resource_group" {
-  name = "${var.name}-rg"
-}
-
-data "azurerm_subnet" "akssubnet" {
-  name                 = "aks"
-  virtual_network_name = "${var.name}-vnet"
-  resource_group_name  = data.azurerm_resource_group.resource_group.name
-}
-
-data "azurerm_subnet" "appgwsubnet" {
-  name                 = "appgw"
-  virtual_network_name = "${var.name}-vnet"
-  resource_group_name  = data.azurerm_resource_group.resource_group.name
-}
-
-data "azurerm_log_analytics_workspace" "workspace" {
-  name                = "${var.name}-la"
-  resource_group_name = data.azurerm_resource_group.resource_group.name
-}
-
 resource "azurerm_kubernetes_cluster" "k8s" {
   name                = "${var.name}aks"
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.resource_group.name
+  resource_group_name = var.resource_group_name
   dns_prefix          = "${var.name}dns"
   kubernetes_version  = var.kubernetes_version
 
@@ -40,7 +19,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     name                 = "agentpool"
     node_count           = var.agent_count
     vm_size              = var.vm_size
-    vnet_subnet_id       = data.azurerm_subnet.akssubnet.id
+    vnet_subnet_id       = var.akssubnet_id
     type                 = "VirtualMachineScaleSets"
     orchestrator_version = var.kubernetes_version
   }

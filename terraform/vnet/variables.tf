@@ -1,3 +1,8 @@
+variable "resource_group_name" {
+  type        = string
+  description = "Resource Group Name"
+}
+
 variable "network_address_space" {
   type        = string
   description = "Azure VNET Address Space"
