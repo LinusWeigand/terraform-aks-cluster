@@ -23,6 +23,14 @@ provider "azurerm" {
   subscription_id = var.SUBSCRIPTION_ID
 }
 
+
+# Resource Group
+resource "azurerm_resource_group" "resource_group" {
+  name     = "${var.name}-rg"
+  location = var.location
+}
+
+# Virtual Network
 module "vnet" {
   source                    = "./vnet"
   name                      = "linus"
@@ -34,12 +42,14 @@ module "vnet" {
   subnet_address_prefix     = "192.168.1.0/24"
 }
 
+# Log Analytics
 module "log_analytics" {
   source   = "./log_analytics"
   name     = "linus"
   location = "germanywestcentral"
 }
 
+# Kubernetes Cluster
 module "aks" {
 
   source                     = "./aks"
@@ -52,6 +62,7 @@ module "aks" {
   aks_admins_group_object_id = "d0819c2d-cf12-40b7-b2cf-169cff1e2927"
 }
 
+# Kubernetes Deployments
 module "aks_deployments" {
   source   = "./aks_deployments"
   name     = "linus"

@@ -1,8 +1,3 @@
-resource "azurerm_resource_group" "resource_group" {
-  name     = "${var.name}-rg"
-  location = var.location
-}
-
 resource "azurerm_virtual_network" "virtual_network" {
   name                = "${var.name}-vnet"
   location            = var.location
