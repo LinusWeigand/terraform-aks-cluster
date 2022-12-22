@@ -1,3 +1,5 @@
+#!/bin/sh
+
 RESOURCE_GROUP_NAME = "storage-resource-group"
 CONTAINER_REGISTRY_NAME = "containerregistrylinus"
 AKS_CLUSTER_NAME = "akslinus"
