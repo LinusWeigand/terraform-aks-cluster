@@ -124,7 +124,7 @@ resource "kubernetes_service" "azure-vote-front" {
   }
 }
 
-resource "kubernetes_ingress" "ingress" {
+resource "kubernetes_ingress_v1" "ingress" {
   metadata {
     name = "ingress"
     annotations = {
@@ -137,8 +137,12 @@ resource "kubernetes_ingress" "ingress" {
         path {
           path = "/"
           backend {
-            service_name = kubernetes_service.azure-vote-front.metadata.0.name
-            service_port = kubernetes_service.azure-vote-front.spec.0.port.0.target_port
+            service {
+              name = kubernetes_service.azure-vote-front.metadata.0.name
+              port {
+                number = kubernetes_service.azure-vote-front.spec.0.port.0.target_port
+              }
+            }
           }
         }
       }

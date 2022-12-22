@@ -28,11 +28,16 @@ provider "azurerm" {
   subscription_id = var.SUBSCRIPTION_ID
 }
 
+data "azurerm_kubernetes_cluster" "linusaks" {
+  name                = "linusaks"
+  resource_group_name = "${var.name}-rg"
+}
+
 provider "kubernetes" {
-  host                   = module.aks.kubernetes_cluster_host
-  client_certificate     = base64decode(module.aks.client_certificate)
-  client_key             = base64decode(module.aks.client_key)
-  cluster_ca_certificate = base64decode(module.aks.cluster_ca_certificate)
+  host                   = data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.host
+  client_certificate     = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.client_certificate)
+  client_key             = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.client_key)
+  cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.cluster_ca_certificate)
 }
 
 
@@ -69,7 +74,7 @@ module "aks" {
   source                     = "./aks"
   name                       = "linus"
   location                   = "germanywestcentral"
-  kubernetes_version         = "2.16.1"
+  kubernetes_version         = "1.24.6"
   agent_count                = 3
   vm_size                    = "Standard_DS2_v2"
   ssh_public_key             = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDeKC5qE4+lWfW+QNh2ZuUKKoWh6jXiv2Rm0HyjdPuHiEb67TovTwYL/pfYomU0XDy9zmMsbLVRRm370ITNT0wOby2oZVN/ezaSBf9X2Mlrs4iykuf8715lfJi9xfy+aJFgNsdN28f+YvGPGU2O8KavSKtARoaXgE4wx1TWUHJIjxUw0XDdDdyJXvzQxAXqmOesPjaqq6vJymmM01NgvPBheIg0m93T849CQ8wS4JouhAdznJ+AR+YX/RgK54F9OvgI6HFQg1e4puh2P+tcmTsYiqLGu+Fj8pvK7kjQoLBe4PJFNzf2zh5qrCTkrfu2pg9KoGY2uykDmae2iDgkaAGJYbE2UVk6vcfGXiy9W4UMZXAyQa8vhmInUHAJBnSgcILmUClArgx73e+fJ5dINrW1KaKX+uMpNa751N804ksF9rvK/qZinFOCIW06+zrA0NNrl7Ws5TyZs0mvQYb22mSw0tOOye7uzUBFNwJD79oo2ft9QgbfkgXObW1J6sp+Edk= linus@LAPTOP-FU4LQFR3"
@@ -78,7 +83,7 @@ module "aks" {
   akssubnet_id               = module.vnet.akssubnet_id
 }
 
-# Kubernetes Deployments
+# Kubernetes Deploymentsyes
 module "aks_deployments" {
   source   = "./aks_deployments"
   name     = "linus"
