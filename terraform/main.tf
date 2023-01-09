@@ -15,7 +15,7 @@ terraform {
     resource_group_name  = "storage-resource-group"
     storage_account_name = "storageaccountlinus"
     container_name       = "tfstate"
-    key                  = "1LaXs7a8CQ86MMHYPx6I7kI2G8i4X8eTz0jBpfn3qkDFK585iaq9SoMUP9YY4Pb5VHfEcdTnCDj5+ASt5Ni0ag=="
+    key                  = "fH3ll5bl2TazdRbN9p+1q61ZSeI+5ew6FOPMLsUom4FFqi4BnU2ANNemoExG+HjHipHM0rkCUceL+AStudSSlw=="
     subscription_id      = "2a70cd88-34b2-4240-9c18-221c1564239d"
   }
 }
@@ -28,17 +28,17 @@ provider "azurerm" {
   subscription_id = var.SUBSCRIPTION_ID
 }
 
-data "azurerm_kubernetes_cluster" "linusaks" {
-  name                = "linusaks"
-  resource_group_name = "${var.name}-rg"
-}
+# data "azurerm_kubernetes_cluster" "linusaks" {
+#   name                = "linusaks"
+#   resource_group_name = "${var.name}-rg"
+# }
 
-provider "kubernetes" {
-  host                   = data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.host
-  client_certificate     = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.client_certificate)
-  client_key             = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.client_key)
-  cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.cluster_ca_certificate)
-}
+# provider "kubernetes" {
+#   host                   = data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.host
+#   client_certificate     = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.client_certificate)
+#   client_key             = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.client_key)
+#   cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.cluster_ca_certificate)
+# }
 
 
 # Resource Group
@@ -84,8 +84,8 @@ module "aks" {
 }
 
 # Kubernetes Deploymentsyes
-module "aks_deployments" {
-  source   = "./aks_deployments"
-  name     = "linus"
-  location = "germanywestcentral"
-}
+# module "aks_deployments" {
+#   source   = "./aks_deployments"
+#   name     = "linus"
+#   location = "germanywestcentral"
+# }

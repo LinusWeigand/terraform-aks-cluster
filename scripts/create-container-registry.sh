@@ -1,11 +1,18 @@
 #!/bin/sh
 
-RESOURCE_GROUP_NAME = "storage-resource-group"
-CONTAINER_REGISTRY_NAME = "containerregistrylinus"
-AKS_CLUSTER_NAME = "akslinus"
+RESOURCE_GROUP_NAME="containers"
+CONTAINER_REGISTRY_NAME="linuscontainerregistry"
+AKS_CLUSTER_NAME="linusaks"
+LOCATION="germanywestcentral"
 
 # create resource group
-az group create -n $AKS_RESOURCE_GROUP -l $AKS_LOCATION
+az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
 
 # create container registry
-az aks create -n $AKS_CLUSTER_NAME -g $AKS_RESOURCE_GROUP --generate-ssh-keys --attach-acr $ACR_NAME
+az acr create -n $CONTAINER_REGISTRY_NAME -g $RESOURCE_GROUP_NAME --sku Basic
+
+# attach to aks cluster
+az aks update -n $AKS_CLUSTER_NAME -g $RESOURCE_GROUP_NAME --attach-acr $CONTAINER_REGISTRY_NAME
+
+
+# az aks update -n "linusaks" -g "containers" --attach-acr "linuscontainerregistry"
