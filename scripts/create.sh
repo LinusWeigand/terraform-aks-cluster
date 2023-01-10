@@ -13,7 +13,7 @@ cd ..
 cd scripts
 
 # Create deployments
-./deployments.sh
+./deployment.sh
 
 # Get services
 ./get_services.sh
