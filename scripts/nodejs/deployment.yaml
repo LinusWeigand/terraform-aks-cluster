@@ -1,0 +1,60 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodejs-front
+  template:
+    metadata:
+      labels:
+        app: nodejs-front
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+      containers:
+      - name: nodejs-front
+        image: linuscontainerregistry2.azurecr.io/create-react-app:1.0.0
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodejs-front
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    app: nodejs-front
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nodejs-front
+                port: 
+                  number: 80           
+
+
