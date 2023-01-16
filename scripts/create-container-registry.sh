@@ -17,4 +17,4 @@ az aks update -n $AKS_CLUSTER_NAME -g $RESOURCE_GROUP_NAME --attach-acr $CONTAIN
 # push image to container registry
 az acr login --name $CONTAINER_REGISTRY_NAME
 
-docker push linuscontainerregistry2.azurecr.io/create-react-app:1.0.0
+docker push linuscontainerregistry2.azurecr.io/btc:1.0.0
