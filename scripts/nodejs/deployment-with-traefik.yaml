@@ -26,17 +26,18 @@ spec:
             cpu: 250m
             memory: 1024Mi
         ports:
-        - containerPort: 3000
+          - name: web
+            containerPort: 3000
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: nodejs-front
 spec:
-  type: LoadBalancer
   ports:
-  - port: 3000
-    targetPort: 3000
+    - name: web
+      port: 3000
+      targetPort: web
   selector:
     app: nodejs-front
 ---
@@ -56,6 +57,6 @@ spec:
               service:
                 name: nodejs-front
                 port: 
-                  number: 3000           
+                  name: web           
 
 
