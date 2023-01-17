@@ -3,7 +3,7 @@ globalArguments:
   - "--global.checknewversion=false"
 
 additionalArguments:
-  - "--serverTransport.insecureskipverify=true"
+  - "--serversTransport.insecureSkipVerify=true"
   - "--log.level=DEBUG"
 
 deployment:
@@ -42,7 +42,7 @@ service:
   type: LoadBalancer
   annotations: {}
   labels: {}
-  spec:
-    loadBalancerIP: 192.168.30.80
+  # spec:
+  #   loadBalancerIP: 192.168.0.11
   loadBalancerSourceRanges: []
   externalIPs: []
