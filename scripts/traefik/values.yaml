@@ -43,6 +43,6 @@ service:
   annotations: {}
   labels: {}
   # spec:
-  #   loadBalancerIP: 192.168.0.11
+  #   loadBalancerIP: 20.113.13.214
   loadBalancerSourceRanges: []
   externalIPs: []
