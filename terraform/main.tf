@@ -15,7 +15,7 @@ terraform {
     resource_group_name  = "storage-resource-group"
     storage_account_name = "storageaccountlinus"
     container_name       = "tfstate"
-    key                  = "/taCqEKFym4YotSrdphvlEw2Z4rbnu1mLafbqrwCMF1TZYQXvuh1cZfHRzQHzioPo9lnHVE/8gpR+AStT1PEbw=="
+    key                  = "cysZt4X2uO2WvbDIt9pn/lbkaMAytT8DS/V5lLiN+HhBXiZ7M/YLN7RAA5G14RZTCBplPJRyxpVM+AStI/8POg=="
     subscription_id      = "2a70cd88-34b2-4240-9c18-221c1564239d"
   }
 }

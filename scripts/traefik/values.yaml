@@ -4,7 +4,7 @@ globalArguments:
 
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
-  - "--log.level=DEBUG"
+  - "--log.level=INFO"
 
 deployment:
   enabled: true

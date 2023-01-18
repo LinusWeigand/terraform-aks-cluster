@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: local-linusweigand-com
+  namespace: default
+spec:
+  secretName: local-linusweigand-com-tls
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer
+  commonName: "*.local.linusweigand.com"
+  dnsNames:
+    - "local.linusweigand.com"
+    - "*.local.linusweigand.com"

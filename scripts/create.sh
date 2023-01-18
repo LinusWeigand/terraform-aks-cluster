@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Navigate into terraform directory
 cd ..
 cd terraform
