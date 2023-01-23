@@ -18,13 +18,6 @@ spec:
       containers:
       - name: nodejs-front
         image: linuscontainerregistry2.azurecr.io/btc:1.0.0
-        resources:
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 250m
-            memory: 1024Mi
         ports:
         - containerPort: 3000
 ---
@@ -35,7 +28,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 3000
+  - port: 80
     targetPort: 3000
   selector:
     app: nodejs-front
@@ -43,7 +36,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress
+  name: ingress-nodejs
   annotations:
     kubernetes.io/ingress.class: azure/application-gateway
 spec:
@@ -56,6 +49,6 @@ spec:
               service:
                 name: nodejs-front
                 port: 
-                  number: 3000           
+                  number: 80           
 
 
