@@ -237,3 +237,4 @@ resource "kubernetes_secret" "cert-manager-tls" {
     tls.key = filebase64("certs/cert-manager.linusweigand.com.key")
   }
 }
+

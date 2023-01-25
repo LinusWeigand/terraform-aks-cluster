@@ -25,3 +25,12 @@ variable "SUBSCRIPTION_ID" {
 variable "TENANT_ID" {
   type = string
 }
+
+variable "cloudflare_email" {
+  type    = string
+  default = "linus@couchtec.com"
+}
+
+variable "cloudflare_api_token" {
+  type = string
+}

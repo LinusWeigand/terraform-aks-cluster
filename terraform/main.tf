@@ -9,6 +9,16 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "=2.16.1"
     }
+
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "=3.33.1"
+    }
+
+    helm = {
+      source  = "helm"
+      version = "=2.8.0"
+    }
   }
 
   backend "azurerm" {
@@ -26,6 +36,21 @@ provider "azurerm" {
   client_secret   = var.CLIENT_SECRET
   tenant_id       = var.TENANT_ID
   subscription_id = var.SUBSCRIPTION_ID
+}
+
+provider "helm" {
+  kubernetes {
+    host = azurerm_kubernetes_cluster.k8s.kube_config.0.host
+
+    client_certificate     = base64decode(azurerm_kubernetes_cluster.k8s.kube_config.0.client_certificate)
+    client_key             = base64decode(azurerm_kubernetes_cluster.k8s.kube_config.0.client_key)
+    cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.k8s.kube_config.0.cluster_ca_certificate)
+  }
+}
+
+provider "cloudflare" {
+  email   = var.cloudflare_email
+  api_key = var.cloudflare_api_token
 }
 
 # data "azurerm_kubernetes_cluster" "linusaks" {
