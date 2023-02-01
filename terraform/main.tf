@@ -12,7 +12,7 @@ terraform {
 
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "=3.33.1"
+      version = "=3.9.1"
     }
 
     helm = {
@@ -20,13 +20,11 @@ terraform {
       version = "=2.8.0"
     }
   }
-
   backend "azurerm" {
     resource_group_name  = "storage-resource-group"
     storage_account_name = "storageaccountlinus"
     container_name       = "tfstate"
-    key                  = "cysZt4X2uO2WvbDIt9pn/lbkaMAytT8DS/V5lLiN+HhBXiZ7M/YLN7RAA5G14RZTCBplPJRyxpVM+AStI/8POg=="
-    subscription_id      = "2a70cd88-34b2-4240-9c18-221c1564239d"
+    key                  = "terraform.tfstate"
   }
 }
 
@@ -40,43 +38,30 @@ provider "azurerm" {
 
 provider "helm" {
   kubernetes {
-    host = azurerm_kubernetes_cluster.k8s.kube_config.0.host
-
-    client_certificate     = base64decode(azurerm_kubernetes_cluster.k8s.kube_config.0.client_certificate)
-    client_key             = base64decode(azurerm_kubernetes_cluster.k8s.kube_config.0.client_key)
-    cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.k8s.kube_config.0.cluster_ca_certificate)
+    config_path = "~/.kube/config"
   }
 }
 
 provider "cloudflare" {
-  email   = var.cloudflare_email
-  api_key = var.cloudflare_api_token
+  email     = var.cloudflare_email
+  api_token = var.cloudflare_api_token
 }
 
-# data "azurerm_kubernetes_cluster" "linusaks" {
-#   name                = "linusaks"
-#   resource_group_name = "${var.name}-rg"
-# }
 
-# provider "kubernetes" {
-#   host                   = data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.host
-#   client_certificate     = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.client_certificate)
-#   client_key             = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.client_key)
-#   cluster_ca_certificate = base64decode(data.azurerm_kubernetes_cluster.linusaks.kube_admin_config.0.cluster_ca_certificate)
-# }
-
+provider "kubernetes" {
+  config_path = "~/.kube/config"
+}
 
 # Resource Group
 resource "azurerm_resource_group" "resource_group" {
   name     = "${var.name}-rg"
   location = var.location
 }
-
 # Virtual Network
 module "vnet" {
   source                    = "./vnet"
-  name                      = "linus"
-  location                  = "germanywestcentral"
+  name                      = var.name
+  location                  = var.location
   network_address_space     = "192.168.0.0/16"
   aks_subnet_address_name   = "aks"
   aks_subnet_address_prefix = "192.168.0.0/24"
@@ -86,19 +71,18 @@ module "vnet" {
 }
 
 # Log Analytics
-module "log_analytics" {
-  source              = "./log_analytics"
-  name                = "linus"
-  location            = "germanywestcentral"
-  resource_group_name = azurerm_resource_group.resource_group.name
-}
+# module "log_analytics" {
+#   source              = "./log_analytics"
+#   name                = "linus"
+#   location            = "germanywestcentral"
+#   resource_group_name = azurerm_resource_group.resource_group.name
+# }
 
 # Kubernetes Cluster
 module "aks" {
-
   source                     = "./aks"
-  name                       = "linus"
-  location                   = "germanywestcentral"
+  name                       = var.name
+  location                   = var.location
   kubernetes_version         = "1.24.6"
   agent_count                = 3
   vm_size                    = "Standard_DS2_v2"
@@ -108,9 +92,64 @@ module "aks" {
   akssubnet_id               = module.vnet.akssubnet_id
 }
 
-# Kubernetes Deploymentsyes
 # module "aks_deployments" {
-#   source   = "./aks_deployments"
-#   name     = "linus"
-#   location = "germanywestcentral"
+#   source               = "./aks_deployments"
+#   name                 = "linus"
+#   location             = "germanywestcentral"
+#   cloudflare_email     = var.cloudflare_email
+#   cloudflare_api_token = var.cloudflare_api_token
 # }
+
+module "cert-manager" {
+  source               = "./cm"
+  cloudflare_email     = var.cloudflare_email
+  cloudflare_api_token = var.cloudflare_api_token
+  resource_group_name  = azurerm_resource_group.resource_group.name
+}
+
+# module "traefik" {
+#   source               = "./tr"
+#   cloudflare_email     = var.cloudflare_email
+#   cloudflare_api_token = var.cloudflare_api_token
+# }
+
+resource "kubernetes_namespace" "traefik" {
+  metadata {
+    name = "traefik"
+  }
+}
+
+resource "helm_release" "traefik" {
+  name       = "traefik"
+  repository = "https://helm.traefik.io/traefik"
+  chart      = "traefik"
+  version    = "10.14.2"
+  namespace  = kubernetes_namespace.traefik.metadata.0.name
+
+  set {
+    name  = "ports.web.redirectTo"
+    value = "websecure"
+  }
+
+  # Trust private AKS IP range
+  set {
+    name  = "additionalArguments"
+    value = "{--entryPoints.websecure.forwardedHeaders.trustedIPs=192.168.0.0/16}"
+  }
+}
+
+data "kubernetes_service" "traefik" {
+  metadata {
+    name      = helm_release.traefik.name
+    namespace = helm_release.traefik.namespace
+  }
+}
+
+resource "cloudflare_record" "traefik" {
+  zone_id = var.zone_id
+  name    = "aks"
+  type    = "A"
+  value   = data.kubernetes_service.traefik.status.0.load_balancer.0.ingress.0.ip
+  proxied = false
+}
+
