@@ -5,7 +5,7 @@ metadata:
   namespace: cert-manager-test
 spec:
   dnsNames:
-    - linusweigand.com
+    - aks.linusweigand.com
   secretName: selfsigned-cert-tls
   issuerRef:
     name: test-selfsigned

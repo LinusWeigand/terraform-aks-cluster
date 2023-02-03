@@ -85,28 +85,27 @@ spec:
     app: azure-vote-front
 ---
 
-# apiVersion: networking.k8s.io/v1
-# kind: Ingress
-# metadata:
-#   name: ingress-azure-vote
-#   annotations:
-#     kubernetes.io/ingress.class: azure/application-gateway
-# spec:
-#   tls: 
-#     - hosts:
-#       - linusweigand.com
-#       secretName: selfsigned-cert-tls
-#   rules:
-#     - host: linusweigand.com
-#       http:
-#         paths:
-#           - path: /
-#             pathType: Prefix
-#             backend:
-#               service:
-#                 name: azure-vote-front
-#                 port: 
-#                   number: 80
-
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+ name: test
+ annotations:
+   cert-manager.io/issuer: "letsencrypt-staging"
+spec:
+ tls:
+   - hosts:
+       - aks.linusweigand.com
+     secretName: linusweigand-com-tls
+ rules:
+   - host: aks.linusweigand.com
+     http:
+       paths:
+         - path: /
+           pathType: Prefix
+           backend:
+             service:
+               name: azure-vote-front
+               port:
+                 number: 80
 
 

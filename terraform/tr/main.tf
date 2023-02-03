@@ -31,7 +31,7 @@ data "kubernetes_service" "traefik" {
 }
 
 resource "cloudflare_record" "traefik" {
-  zone_id = var.zone
+  zone_id = var.zone_id
   name    = "aks"
   type    = "A"
   value   = data.kubernetes_service.traefik.status.0.load_balancer.0.ingress.0.ip

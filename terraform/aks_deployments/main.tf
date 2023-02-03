@@ -182,7 +182,7 @@ resource "kubernetes_ingress_v1" "ingress" {
     }
 
     tls {
-      hosts       = ["linusweigand.com"]
+      hosts       = ["aks.linusweigand.com"]
       secret_name = "azure-vote-front-tls-secret"
     }
   }

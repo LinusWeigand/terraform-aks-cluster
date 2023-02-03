@@ -119,6 +119,7 @@ resource "kubernetes_namespace" "traefik" {
   }
 }
 
+# Configure Traefik to use the the certificate stored in the kubernetes secret aks-linusweigand-com-tls
 resource "helm_release" "traefik" {
   name       = "traefik"
   repository = "https://helm.traefik.io/traefik"
@@ -126,15 +127,16 @@ resource "helm_release" "traefik" {
   version    = "10.14.2"
   namespace  = kubernetes_namespace.traefik.metadata.0.name
 
+  values = ["certificates: \n- issuerRef: \nname: letsencrypt-staging\n kind: ClusterIssuer\n secretName: aks-linusweigand-tls"]
+
   set {
-    name  = "ports.web.redirectTo"
-    value = "websecure"
+    name  = "routes.default.rule"
+    value = "Host(`aks.linusweigand.com`) && PathPrefix(`/`)"
   }
 
-  # Trust private AKS IP range
   set {
-    name  = "additionalArguments"
-    value = "{--entryPoints.websecure.forwardedHeaders.trustedIPs=192.168.0.0/16}"
+    name  = "routes.default.tls.secretName"
+    value = "aks-linusweigand-com-tls"
   }
 }
 
@@ -152,4 +154,3 @@ resource "cloudflare_record" "traefik" {
   value   = data.kubernetes_service.traefik.status.0.load_balancer.0.ingress.0.ip
   proxied = false
 }
-
