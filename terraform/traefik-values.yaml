@@ -1,0 +1,5 @@
+certificates:
+  - issuerRef:
+      name: letsencrypt-staging
+      kind: ClusterIssuer
+    secretName: aks-linusweigand-tls

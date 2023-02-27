@@ -47,47 +47,48 @@ resource "kubernetes_secret" "letsencrypt_cloudflare_api_token_secret" {
 }
 
 # -------------------------------------- CLuster Issuer --------------------------------------
-resource "kubernetes_manifest" "letsencrypt_issuer_staging" {
-  manifest = yamldecode(templatefile(
-    "${path.module}/letsencrypt-issuer.tpl.yaml",
-    {
-      "name"                      = "letsencrypt-staging"
-      "email"                     = var.cloudflare_email
-      "server"                    = "https://acme-staging-v02.api.letsencrypt.org/directory"
-      "api_token_secret_name"     = kubernetes_secret.letsencrypt_cloudflare_api_token_secret.metadata.0.name
-      "api_token_secret_data_key" = keys(kubernetes_secret.letsencrypt_cloudflare_api_token_secret.data).0
-    }
-  ))
+# resource "kubernetes_manifest" "letsencrypt_issuer_staging" {
+#   manifest = yamldecode(templatefile(
+#     "${path.module}/letsencrypt-issuer.tpl.yaml",
+#     {
+#       "name"                      = "letsencrypt-staging"
+#       "email"                     = var.cloudflare_email
+#       "server"                    = "https://acme-staging-v02.api.letsencrypt.org/directory"
+#       "api_token_secret_name"     = kubernetes_secret.letsencrypt_cloudflare_api_token_secret.metadata.0.name
+#       "api_token_secret_data_key" = keys(kubernetes_secret.letsencrypt_cloudflare_api_token_secret.data).0
+#     }
+#   ))
 
-  depends_on = [helm_release.cert_manager]
-}
+#   depends_on = [helm_release.cert_manager, kubernetes_namespace.cert_manager, kubernetes_secret.letsencrypt_cloudflare_api_token_secret]
+# }
 
-resource "kubernetes_manifest" "letsencrypt_issuer_production" {
-  manifest = yamldecode(templatefile(
-    "${path.module}/letsencrypt-issuer.tpl.yaml",
-    {
-      "name"                      = "letsencrypt-production"
-      "email"                     = var.cloudflare_email
-      "server"                    = "https://acme-v02.api.letsencrypt.org/directory"
-      "api_token_secret_name"     = kubernetes_secret.letsencrypt_cloudflare_api_token_secret.metadata.0.name
-      "api_token_secret_data_key" = keys(kubernetes_secret.letsencrypt_cloudflare_api_token_secret.data).0
-    }
-  ))
+# resource "kubernetes_manifest" "letsencrypt_issuer_production" {
+#   manifest = yamldecode(templatefile(
+#     "${path.module}/letsencrypt-issuer.tpl.yaml",
+#     {
+#       "name"                      = "letsencrypt-production"
+#       "email"                     = var.cloudflare_email
+#       "server"                    = "https://acme-v02.api.letsencrypt.org/directory"
+#       "api_token_secret_name"     = kubernetes_secret.letsencrypt_cloudflare_api_token_secret.metadata.0.name
+#       "api_token_secret_data_key" = keys(kubernetes_secret.letsencrypt_cloudflare_api_token_secret.data).0
+#     }
+#   ))
 
-  depends_on = [helm_release.cert_manager, kubernetes_namespace.cert_manager]
-}
+#   depends_on = [helm_release.cert_manager, kubernetes_namespace.cert_manager, kubernetes_secret.letsencrypt_cloudflare_api_token_secret]
+# }
 
 # -------------------------------------- Certificate --------------------------------------
-resource "kubernetes_manifest" "certificate" {
-  manifest = yamldecode(templatefile(
-    "${path.module}/certificate.tpl.yaml",
-    {
-      "name"      = "aks-linusweigand-com"
-      "namespace" = kubernetes_namespace.cert_manager.metadata[0].name
-      "domain"    = var.domain
-      "issuer"    = "letsencrypt-staging"
-    }
-  ))
+# resource "kubernetes_manifest" "certificate" {
+#   manifest = yamldecode(templatefile(
+#     "${path.module}/certificate.tpl.yaml",
+#     {
+#       "name"      = "aks-linusweigand-com"
+#       "namespace" = kubernetes_namespace.cert_manager.metadata[0].name
+#       "domain"    = var.domain
+#       "issuer"    = "letsencrypt-staging"
+#     }
+#   ))
 
-  depends_on = [kubernetes_manifest.letsencrypt_issuer_staging, kubernetes_namespace.cert_manager]
-}
+#   depends_on = [kubernetes_manifest.letsencrypt_issuer_staging, kubernetes_namespace.cert_manager]
+# }
+

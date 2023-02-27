@@ -3,7 +3,7 @@
 RESOURCE_GROUP_NAME="linus-rg"
 AKS_CLUSTER_NAME="linusaks"
 
-# sh create-storage-account.sh 
+sh create-storage-account.sh 
 
 # Navigate into terraform directory
 cd ..

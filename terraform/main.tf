@@ -117,40 +117,46 @@ resource "kubernetes_namespace" "traefik" {
   metadata {
     name = "traefik"
   }
+
+  depends_on = [
+    module.aks,
+  ]
 }
 
 # Configure Traefik to use the the certificate stored in the kubernetes secret aks-linusweigand-com-tls
-resource "helm_release" "traefik" {
-  name       = "traefik"
-  repository = "https://helm.traefik.io/traefik"
-  chart      = "traefik"
-  version    = "10.14.2"
-  namespace  = kubernetes_namespace.traefik.metadata.0.name
+# resource "helm_release" "traefik" {
+#   name       = "traefik"
+#   repository = "https://helm.traefik.io/traefik"
+#   chart      = "traefik"
+#   version    = "10.14.2"
+#   namespace  = kubernetes_namespace.traefik.metadata.0.name
 
-  values = ["certificates: \n- issuerRef: \nname: letsencrypt-staging\n kind: ClusterIssuer\n secretName: aks-linusweigand-tls"]
+#   values = [
+#     "${file("${path.module}/traefik-values.yaml")}",
+#   ]
 
-  set {
-    name  = "routes.default.rule"
-    value = "Host(`aks.linusweigand.com`) && PathPrefix(`/`)"
-  }
+#   set {
+#     name  = "routes.default.rule"
+#     value = "Host(`aks.linusweigand.com`) && PathPrefix(`/`)"
+#   }
 
-  set {
-    name  = "routes.default.tls.secretName"
-    value = "aks-linusweigand-com-tls"
-  }
-}
+#   set {
+#     name  = "routes.default.tls.secretName"
+#     value = "aks-linusweigand-com-tls"
+#   }
+# }
 
-data "kubernetes_service" "traefik" {
-  metadata {
-    name      = helm_release.traefik.name
-    namespace = helm_release.traefik.namespace
-  }
-}
+# data "kubernetes_service" "traefik" {
+#   metadata {
+#     name      = helm_release.traefik.name
+#     namespace = helm_release.traefik.namespace
+#   }
+# }
 
-resource "cloudflare_record" "traefik" {
-  zone_id = var.zone_id
-  name    = "aks"
-  type    = "A"
-  value   = data.kubernetes_service.traefik.status.0.load_balancer.0.ingress.0.ip
-  proxied = false
-}
+# resource "cloudflare_record" "traefik" {
+#   zone_id = var.zone_id
+#   name    = "aks"
+#   type    = "A"
+#   value   = data.kubernetes_service.traefik.status.0.load_balancer.0.ingress.0.ip
+#   proxied = false
+# }
