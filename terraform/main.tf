@@ -107,21 +107,28 @@ module "cert-manager" {
   resource_group_name  = azurerm_resource_group.resource_group.name
 }
 
+module "cert-manager-deployments" {
+  source               = "./cm_deployments"
+  cloudflare_email     = var.cloudflare_email
+  cloudflare_api_token = var.cloudflare_api_token
+  resource_group_name  = azurerm_resource_group.resource_group.name
+}
+
 # module "traefik" {
 #   source               = "./tr"
 #   cloudflare_email     = var.cloudflare_email
 #   cloudflare_api_token = var.cloudflare_api_token
 # }
 
-resource "kubernetes_namespace" "traefik" {
-  metadata {
-    name = "traefik"
-  }
+# resource "kubernetes_namespace" "traefik" {
+#   metadata {
+#     name = "traefik"
+#   }
 
-  depends_on = [
-    module.aks,
-  ]
-}
+#   depends_on = [
+#     module.aks,
+#   ]
+# }
 
 # Configure Traefik to use the the certificate stored in the kubernetes secret aks-linusweigand-com-tls
 # resource "helm_release" "traefik" {
@@ -146,17 +153,27 @@ resource "kubernetes_namespace" "traefik" {
 #   }
 # }
 
-# data "kubernetes_service" "traefik" {
+
+# data "kubernetes_service" "azure-vote-front" {
 #   metadata {
-#     name      = helm_release.traefik.name
-#     namespace = helm_release.traefik.namespace
+#     name = "azure-vote-front"
 #   }
 # }
 
-# resource "cloudflare_record" "traefik" {
+# resource "cloudflare_record" "azure-vote-front" {
 #   zone_id = var.zone_id
 #   name    = "aks"
 #   type    = "A"
-#   value   = data.kubernetes_service.traefik.status.0.load_balancer.0.ingress.0.ip
 #   proxied = false
+
+#   data {
+#     service  = "azure-vote-front"
+#     proto    = "TCP"
+#     name     = "azure-vote-front"
+#     priority = 10
+#     weight   = 100
+#     port     = 443
+#     target   = "linusweigand.com"
+#   }
+
 # }

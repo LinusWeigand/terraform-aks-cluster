@@ -78,28 +78,65 @@ kind: Service
 metadata:
   name: azure-vote-front
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
-  - port: 80
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    protocol: TCP
+
   selector:
     app: azure-vote-front
 ---
 
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: ingress-azure-vote
+#   annotations:
+#     kubernetes.io/ingress.class: azure/application-gateway
+# spec:
+#   rules:
+#     - http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: azure-vote-front
+#                 port: 
+#                   number: 80
+
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-azure-vote
   annotations:
+    # add an annotation indicating the issuer to use.
+    cert-manager.io/cluster-issuer: letsencrypt-staging
     kubernetes.io/ingress.class: azure/application-gateway
+    appgw.ingress.kubernetes.io/backend-protocol: "https"
+    appgw.ingress.kubernetes.io/ssl-redirect: "true"
+  name: ingress-azure-vote
 spec:
   rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: azure-vote-front
-                port: 
-                  number: 80
+  - host: linusweigand.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: azure-vote-front
+            port:
+              name: https
+  tls: # < placing a host in the TLS config will determine what ends up in the cert's subjectAltNames
+  - hosts:
+    - linusweigand.com
+    secretName: linusweigand-tls # < cert-manager will store the created certificate in this secret.
+
 

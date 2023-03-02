@@ -12,7 +12,7 @@ spec:
     name: ${issuer}
     kind: ClusterIssuer
 # Configure traefik to be my ingress controller
-  acme:
-    config:
-    - http01:
-        ingressClass: traefik
+  # acme:
+  #   config:
+  #   - http01:
+  #       ingressClass: traefik

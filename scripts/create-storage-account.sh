@@ -1,5 +1,3 @@
-How would I implement this script in terraform=
-
 #!/bin/sh
 
 RESOURCE_GROUP_NAME="storage-resource-group"

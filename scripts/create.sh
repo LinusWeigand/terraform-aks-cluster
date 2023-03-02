@@ -10,7 +10,7 @@ cd ..
 cd terraform
 
 # Run tf init
-terraform init -migrate-state
+terraform init -migrate-state -upgrade
 
 # Run tf apply
 terraform apply -auto-approve
