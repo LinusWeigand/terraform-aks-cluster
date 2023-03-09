@@ -5,14 +5,14 @@ terraform {
       version = "=3.36.0"
     }
 
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "=2.35.0"
+    }
+
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "=2.16.1"
-    }
-
-    cloudflare = {
-      source  = "cloudflare/cloudflare"
-      version = "=3.9.1"
     }
 
     helm = {
@@ -30,6 +30,12 @@ terraform {
 
 provider "azurerm" {
   features {}
+  client_id     = var.CLIENT_ID
+  client_secret = var.CLIENT_SECRET
+  tenant_id     = var.TENANT_ID
+}
+
+provider "azuread" {
   client_id       = var.CLIENT_ID
   client_secret   = var.CLIENT_SECRET
   tenant_id       = var.TENANT_ID
@@ -40,11 +46,6 @@ provider "helm" {
   kubernetes {
     config_path = "~/.kube/config"
   }
-}
-
-provider "cloudflare" {
-  email     = var.cloudflare_email
-  api_token = var.cloudflare_api_token
 }
 
 
@@ -68,6 +69,7 @@ module "vnet" {
   subnet_address_name       = "appgw"
   subnet_address_prefix     = "192.168.1.0/24"
   resource_group_name       = azurerm_resource_group.resource_group.name
+  domain                    = var.domain
 }
 
 # Log Analytics
@@ -80,12 +82,12 @@ module "vnet" {
 
 # Kubernetes Cluster
 module "aks" {
-  source                     = "./aks"
-  name                       = var.name
-  location                   = var.location
-  kubernetes_version         = "1.24.6"
-  agent_count                = 3
-  vm_size                    = "Standard_DS2_v2"
+  source             = "./aks"
+  name               = var.name
+  location           = var.location
+  kubernetes_version = "1.24.6"
+  agent_count        = 1
+  vm_size                    = "Standard_B2s"
   ssh_public_key             = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDeKC5qE4+lWfW+QNh2ZuUKKoWh6jXiv2Rm0HyjdPuHiEb67TovTwYL/pfYomU0XDy9zmMsbLVRRm370ITNT0wOby2oZVN/ezaSBf9X2Mlrs4iykuf8715lfJi9xfy+aJFgNsdN28f+YvGPGU2O8KavSKtARoaXgE4wx1TWUHJIjxUw0XDdDdyJXvzQxAXqmOesPjaqq6vJymmM01NgvPBheIg0m93T849CQ8wS4JouhAdznJ+AR+YX/RgK54F9OvgI6HFQg1e4puh2P+tcmTsYiqLGu+Fj8pvK7kjQoLBe4PJFNzf2zh5qrCTkrfu2pg9KoGY2uykDmae2iDgkaAGJYbE2UVk6vcfGXiy9W4UMZXAyQa8vhmInUHAJBnSgcILmUClArgx73e+fJ5dINrW1KaKX+uMpNa751N804ksF9rvK/qZinFOCIW06+zrA0NNrl7Ws5TyZs0mvQYb22mSw0tOOye7uzUBFNwJD79oo2ft9QgbfkgXObW1J6sp+Edk= linus@LAPTOP-FU4LQFR3"
   aks_admins_group_object_id = "d0819c2d-cf12-40b7-b2cf-169cff1e2927"
   resource_group_name        = azurerm_resource_group.resource_group.name
@@ -100,19 +102,28 @@ module "aks" {
 #   cloudflare_api_token = var.cloudflare_api_token
 # }
 
-module "cert-manager" {
-  source               = "./cm"
-  cloudflare_email     = var.cloudflare_email
-  cloudflare_api_token = var.cloudflare_api_token
-  resource_group_name  = azurerm_resource_group.resource_group.name
-}
+  # module "cert-manager" {
+  #   source               = "./cm"
+  #   resource_group_name  = azurerm_resource_group.resource_group.name
+  #   cert_manager_version = "v1.11.0"
+  #   domain               = var.domain
 
-module "cert-manager-deployments" {
-  source               = "./cm_deployments"
-  cloudflare_email     = var.cloudflare_email
-  cloudflare_api_token = var.cloudflare_api_token
-  resource_group_name  = azurerm_resource_group.resource_group.name
-}
+  #   depends_on = [
+  #     module.aks,
+  #   ]
+  # }
+
+# module "cert-manager-deployments" {
+#   source              = "./cm_deployments"
+#   resource_group_name = azurerm_resource_group.resource_group.name
+#   domain              = var.domain
+#   email               = var.email
+#   subscription_id     = var.SUBSCRIPTION_ID
+
+#   depends_on = [
+#     module.cert-manager
+#   ]
+# }
 
 # module "traefik" {
 #   source               = "./tr"

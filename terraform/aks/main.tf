@@ -28,6 +28,9 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     type = "SystemAssigned"
   }
 
+  oidc_issuer_enabled       = true
+  workload_identity_enabled = true
+
   network_profile {
     load_balancer_sku = "standard"
     network_plugin    = "azure"

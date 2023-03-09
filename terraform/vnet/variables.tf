@@ -33,3 +33,6 @@ variable "name" {
 
 variable "location" {
 }
+
+variable "domain" {
+}

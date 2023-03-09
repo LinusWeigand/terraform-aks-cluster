@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: www
+  namespace: ${namespace}
+spec:
+  secretName: www-tls
+  privateKey:
+    rotationPolicy: Always
+  commonName: www.${domain}
+  dnsNames:
+    - www.${domain}
+  usages:
+    - digital signature
+    - key encipherment
+    - server auth
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
