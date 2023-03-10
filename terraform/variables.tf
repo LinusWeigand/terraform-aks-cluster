@@ -35,3 +35,8 @@ variable "email" {
   type    = string
   default = "linus@couchtec.com"
 }
+
+variable "resource_group_name" {
+  type    = string
+  default = "linus-rg"
+}

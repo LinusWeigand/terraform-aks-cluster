@@ -11,10 +11,9 @@ spec:
     solvers:
     - dns01:
         azureDNS:
-          resourceGroupName: ${dns_zone_resource_group_name}
+          resourceGroupName: ${resource_group_name}
           subscriptionID: ${subscription_id}
           hostedZoneName: ${domain}
           environment: AzurePublicCloud
           managedIdentity:
-            resourceGroupName: ${identity_resource_group_name}
-            clientID: ${identity_id}
+            clientID: ${identity_client_id}

@@ -9,3 +9,11 @@ variable "cert_manager_version" {
 variable "domain" {
   type = string
 }
+
+variable "cluster_name" {
+  type = string
+}
+
+variable "location" {
+  type = string
+}

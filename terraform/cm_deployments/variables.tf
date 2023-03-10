@@ -18,3 +18,7 @@ variable "email" {
 variable "subscription_id" {
   type = string
 }
+
+# variable "cert_manager_identity_client_id" {
+#   type = string
+# }

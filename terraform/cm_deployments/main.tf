@@ -81,15 +81,19 @@ resource "kubernetes_manifest" "certificate" {
 #   record = "lb-c5c1cd1c-6104-43e8-a42a-ba6504f6d731.germanywestcentral.cloudapp.azure.com"
 # }
 
+# data for azurerm_role_assignment cert_manager_identity_dns_zone_contributor
+data "azurerm_role_definition" "cert_manager_identity_dns_zone_contributor" {
+  name = "DNS Zone Contributor"
+}
+
 resource "kubernetes_manifest" "clusterissuer-lets-encrypt-staging" {
   manifest = yamldecode(templatefile(
     "${path.module}/clusterissuer-lets-encrypt-staging.yaml", {
-      "email"                        = var.email
-      "dns_zone_resource_group_name" = "dns-zones"
-      "subscription_id"              = var.subscription_id
-      "domain"                       = var.domain
-      "identity_id"                  = "8bd1a9c5-5dfb-4ee8-aeb9-983cc0868f77"
-      "identity_resource_group_name" = "identities"
+      "email"              = var.email
+      "resource_group_name"     = var.resource_group_name
+      "subscription_id"    = var.subscription_id
+      "domain"             = var.domain
+      "identity_client_id" = "105823cd-9362-444d-8e3f-699bd8002dbc"
     }
   ))
 }
