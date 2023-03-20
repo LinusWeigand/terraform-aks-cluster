@@ -2,6 +2,10 @@ variable "domain" {
   type = string
 }
 
+variable "location" {
+  type = string
+}
+
 variable "resource_group_name" {
   type = string
 }
@@ -22,3 +26,7 @@ variable "subscription_id" {
 # variable "cert_manager_identity_client_id" {
 #   type = string
 # }
+
+variable "cluster_name" {
+  type = string
+}

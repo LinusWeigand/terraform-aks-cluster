@@ -1,13 +1,12 @@
 #!/bin/sh
 
-RESOURCE_GROUP_NAME="linus-rg"
+AZURE_DEFAULTS_GROUP="linus-rg"
 USER_ASSIGNED_IDENTITY_NAME="cert-manager-identity" 
 
 # Navigate into terraform directory
 cd ..
 cd terraform
-
-az identity delete --name $USER_ASSIGNED_IDENTITY_NAME --resource-group $RESOURCE_GROUP_NAME
+# az identity delete --name $USER_ASSIGNED_IDENTITY_NAME
 
 terraform destroy -auto-approve
 

@@ -6,7 +6,7 @@ AKS_CLUSTER_NAME="linusaks"
 LOCATION="germanywestcentral"
 
 # create resource group
-az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
+# az group create -n $RESOURCE_GROUP_NAME -l $LOCATION
 
 # create container registry
 az acr create -n $CONTAINER_REGISTRY_NAME -g $RESOURCE_GROUP_NAME --sku Basic

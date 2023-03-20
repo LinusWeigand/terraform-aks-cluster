@@ -1,4 +1,4 @@
-resource "azurerm_kubernetes_cluster" "k8s" {
+resource "azurerm_kubernetes_cluster" "cluster" {
   name                = var.name
   location            = var.location
   resource_group_name = var.resource_group_name
@@ -28,9 +28,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     type = "SystemAssigned"
   }
 
-  oidc_issuer_enabled       = true
-  workload_identity_enabled = true
-
   network_profile {
     load_balancer_sku = "standard"
     network_plugin    = "azure"
@@ -46,17 +43,24 @@ resource "azurerm_kubernetes_cluster" "k8s" {
 }
 
 data "azurerm_resource_group" "node_resource_group" {
-  name = azurerm_kubernetes_cluster.k8s.node_resource_group
+  name = azurerm_kubernetes_cluster.cluster.node_resource_group
   depends_on = [
-    azurerm_kubernetes_cluster.k8s
+    azurerm_kubernetes_cluster.cluster
   ]
 }
 
 resource "azurerm_role_assignment" "node_infrastructure_update_scale_set" {
-  principal_id         = azurerm_kubernetes_cluster.k8s.kubelet_identity[0].object_id
+  principal_id         = azurerm_kubernetes_cluster.cluster.kubelet_identity[0].object_id
   scope                = data.azurerm_resource_group.node_resource_group.id
   role_definition_name = "Virtual Machine Contributor"
   depends_on = [
-    azurerm_kubernetes_cluster.k8s
+    azurerm_kubernetes_cluster.cluster
   ]
+}
+
+resource "azurerm_role_assignment" "dns_contributor" {
+  scope                            = var.dns_zone_id
+  role_definition_name             = "DNS Zone Contributor"
+  principal_id                     = azurerm_kubernetes_cluster.cluster.kubelet_identity[0].object_id
+  skip_service_principal_aad_check = true # Allows skipping propagation of identity to ensure assignment succeeds.
 }

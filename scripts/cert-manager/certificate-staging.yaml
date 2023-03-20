@@ -1,19 +1,19 @@
+# certificate.yaml
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: ${name}
-  namespace: ${namespace}
+  name: www
 spec:
-  secretName: ${name}-tls
+  secretName: www-tls
   privateKey:
     rotationPolicy: Always
-  commonName: ${common_name}
+  commonName: www.$DOMAIN_NAME
   dnsNames:
-    - ${dns_name}
+    - www.$DOMAIN_NAME
   usages:
     - digital signature
     - key encipherment
     - server auth
   issuerRef:
-    name: ${issuer_ref_name}
+    name: letsencrypt-staging
     kind: ClusterIssuer

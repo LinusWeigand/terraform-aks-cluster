@@ -41,7 +41,7 @@ kind: Service
 metadata:
     name: helloweb
     annotations:
-        service.beta.kubernetes.io/azure-dns-label-name: lb-c5c1cd1c-6104-43e8-a42a-ba6504f6d731
+        service.beta.kubernetes.io/azure-dns-label-name: ${dns_label_name}
 spec:
     ports:
     - port: 443

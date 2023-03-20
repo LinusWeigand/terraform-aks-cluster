@@ -1,32 +1,14 @@
-resource "kubernetes_namespace" "cert_manager" {
-  metadata {
-    name = "cert-manager"
-  }
-}
-
 resource "helm_release" "cert_manager" {
-  name             = "cert-manager"
-  repository       = "https://charts.jetstack.io"
-  chart            = "cert-manager"
-  version          = "v1.7.1"
-  create_namespace = false
-  namespace        = kubernetes_namespace.cert_manager.metadata.0.name
+  name       = "cert-manager"
+  repository = "https://charts.jetstack.io"
+  chart      = "cert-manager"
 
-
-  values = [
-    "${file("${path.module}/cert-manager-values.yaml")}",
-  ]
+  namespace        = "cert-manager"
+  create_namespace = true
   set {
     name  = "installCRDs"
-    value = "true"
+    value = true
   }
-
-  set {
-    name  = "logLevel"
-    value = "debug"
-  }
-
-  depends_on = [kubernetes_namespace.cert_manager]
 }
 
 # data "azurerm_dns_zone" "linusweigand_de" {

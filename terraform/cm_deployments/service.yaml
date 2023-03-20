@@ -1,0 +1,19 @@
+This is my service yaml file: How can I redirect http to https using an ingress?
+
+apiVersion: v1
+kind: Service
+metadata:
+    name: helloweb
+    namespace: default
+    annotations:
+        service.beta.kubernetes.io/azure-dns-label-name: ${dns_label_name}
+spec:
+    ports:
+    - port: 443
+      protocol: TCP
+      targetPort: 8443
+      name: https
+    selector:
+        app: hello
+        tier: web
+    type: LoadBalancer

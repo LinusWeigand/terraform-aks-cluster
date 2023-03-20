@@ -31,3 +31,7 @@ variable "location" {
 variable "akssubnet_id" {
 
 }
+
+variable "dns_zone_id" {
+  type = string
+}

@@ -40,3 +40,8 @@ variable "resource_group_name" {
   type    = string
   default = "linus-rg"
 }
+
+variable "dns_zone_id" {
+  type    = string
+  default = "/subscriptions/2a70cd88-34b2-4240-9c18-221c1564239d/resourceGroups/linus-rg/providers/Microsoft.Network/dnszones/linusweigand.de"
+}
