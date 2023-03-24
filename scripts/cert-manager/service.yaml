@@ -14,3 +14,4 @@ spec:
         app: hello
         tier: web
     type: LoadBalancer
+    loadBalancerIP: $AZURE_LOADBALANCER_IP
