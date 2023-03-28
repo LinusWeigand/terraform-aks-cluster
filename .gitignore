@@ -9,3 +9,4 @@ scripts/static-ip-singe-service/http/deploy.sh
 scripts/static-ip-singe-service/http/destroy.sh
 scripts/static-ip-singe-service/tls/deploy.sh
 scripts/static-ip-singe-service/tls/destroy.sh
+scripts/create-container-registry.sh
