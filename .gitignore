@@ -5,8 +5,8 @@ terraform.tfstate.backup
 
 secret-cf-token.yaml
 
-scripts/static-ip-singe-service/http/deploy.sh
-scripts/static-ip-singe-service/http/destroy.sh
-scripts/static-ip-singe-service/tls/deploy.sh
-scripts/static-ip-singe-service/tls/destroy.sh
+scripts/static-ip-single-service/http/deploy.sh
+scripts/static-ip-single-service/http/destroy.sh
+scripts/static-ip-single-service/tls/deploy.sh
+scripts/static-ip-single-service/tls/destroy.sh
 scripts/create-container-registry.sh
