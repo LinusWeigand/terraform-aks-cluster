@@ -30,3 +30,15 @@ variable "subscription_id" {
 variable "cluster_name" {
   type = string
 }
+
+variable "node_resource_group" {
+  type = string
+}
+
+variable "name" {
+  type = string
+}
+
+variable "namespace" {
+  type = string
+}

@@ -53,7 +53,8 @@ provider "kubernetes" {
 # }
 
 locals {
-  cluster_name = "${var.name}aks"
+  cluster_name        = "${var.name}aks"
+  node_resource_group = "${var.name}-node-rg"
 }
 
 # Virtual Network
@@ -91,6 +92,7 @@ module "aks" {
   resource_group_name        = var.resource_group_name
   akssubnet_id               = module.vnet.akssubnet_id
   dns_zone_id                = var.dns_zone_id
+  node_resource_group        = local.node_resource_group
 }
 
 module "cert-manager" {
@@ -106,16 +108,6 @@ module "cert-manager" {
   ]
 }
 
-module "ingress-controller" {
-  source              = "./ing_controller"
-  resource_group_name = var.resource_group_name
-  cluster_name        = local.cluster_name
-
-  depends_on = [
-    module.cert-manager
-  ]
-}
-
 module "cert-manager-deployments" {
   source              = "./cm_deployments"
   resource_group_name = var.resource_group_name
@@ -124,11 +116,25 @@ module "cert-manager-deployments" {
   subscription_id     = var.SUBSCRIPTION_ID
   location            = var.location
   cluster_name        = local.cluster_name
+  node_resource_group = local.node_resource_group
+  name                = var.name
+  namespace           = "ingress-basic"
 
   depends_on = [
     module.cert-manager
   ]
 }
+
+# module "ingress-controller" {
+#   source              = "./ing_controller"
+#   resource_group_name = var.resource_group_name
+#   cluster_name        = local.cluster_name
+
+#   depends_on = [
+#     module.cert-manager
+#   ]
+# }
+
 
 
 

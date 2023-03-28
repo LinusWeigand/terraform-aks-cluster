@@ -35,3 +35,7 @@ variable "akssubnet_id" {
 variable "dns_zone_id" {
   type = string
 }
+
+variable "node_resource_group" {
+  type = string
+}

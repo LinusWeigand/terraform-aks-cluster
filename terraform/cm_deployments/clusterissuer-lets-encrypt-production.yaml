@@ -8,7 +8,7 @@ spec:
     server: https://acme-v02.api.letsencrypt.org/directory
     email: ${email}
     privateKeySecretRef:
-      name: letsencrypt-staging
+      name: letsencrypt-production
     solvers:
     - dns01:
         azureDNS:
@@ -17,4 +17,4 @@ spec:
           hostedZoneName: ${domain}
           environment: AzurePublicCloud
           managedIdentity:
-            clientID: ${identity_client_id}
+            clientID: ${kubelet_client_id}

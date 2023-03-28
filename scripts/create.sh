@@ -29,8 +29,10 @@ terraform apply -auto-approve -lock=false
 
 az aks get-credentials --name $CLUSTER --admin --overwrite-existing
 
-# cd ..
-# cd scripts/cert-manager
+
+# cd .. && cd scripts/cert-manager && kubectl apply -f deployment.yaml
+
+# cd .. && cd scripts/cert-manager && kubectl delete deployment.yaml 
 
 # -------------------------------- Workload Identity --------------------------------------------
 

@@ -1,59 +1,3 @@
-# # -------------------------------------- Secret API Token --------------------------------------
-# resource "kubernetes_secret" "letsencrypt_cloudflare_api_token_secret" {
-#   metadata {
-#     name      = "letsencrypt-cloudflare-api-token-secret"
-#     namespace = "cert-manager"
-#   }
-#   type = "Opaque"
-#   data = {
-#     api_token = var.cloudflare_api_token
-#     email     = var.cloudflare_email
-#   }
-
-# }
-
-# # -------------------------------------- CLuster Issuer --------------------------------------
-# resource "kubernetes_manifest" "letsencrypt_issuer_staging" {
-#   manifest = yamldecode(templatefile(
-#     "${path.module}/letsencrypt-issuer.tpl.yaml",
-#     {
-#       "name"                      = "letsencrypt-staging"
-#       "email"                     = var.cloudflare_email
-#       "server"                    = "https://acme-staging-v02.api.letsencrypt.org/directory"
-#       "api_token_secret_name"     = kubernetes_secret.letsencrypt_cloudflare_api_token_secret.metadata.0.name
-#       "api_token_secret_data_key" = keys(kubernetes_secret.letsencrypt_cloudflare_api_token_secret.data).0
-#     }
-#   ))
-
-# }
-
-# resource "kubernetes_manifest" "letsencrypt_issuer_production" {
-#   manifest = yamldecode(templatefile(
-#     "${path.module}/letsencrypt-issuer.tpl.yaml",
-#     {
-#       "name"                      = "letsencrypt-production"
-#       "email"                     = var.cloudflare_email
-#       "server"                    = "https://acme-v02.api.letsencrypt.org/directory"
-#       "api_token_secret_name"     = kubernetes_secret.letsencrypt_cloudflare_api_token_secret.metadata.0.name
-#       "api_token_secret_data_key" = keys(kubernetes_secret.letsencrypt_cloudflare_api_token_secret.data).0
-#     }
-#   ))
-
-# }
-
-# # -------------------------------------- Certificate --------------------------------------
-# resource "kubernetes_manifest" "certificate" {
-#   manifest = yamldecode(templatefile(
-#     "${path.module}/certificate.tpl.yaml",
-#     {
-#       "name"      = "linusweigand"
-#       "namespace" = "default"
-#       "domain"    = var.domain
-#       "issuer"    = "letsencrypt-staging"
-#     }
-#   ))
-# }
-
 resource "random_uuid" "test" {}
 
 data "azurerm_kubernetes_cluster" "aks_cluster" {
@@ -62,8 +6,8 @@ data "azurerm_kubernetes_cluster" "aks_cluster" {
 }
 
 locals {
-  load_balancer_dns_label_name     = "lb-${random_uuid.test.result}"
-  user_assigned_identity_client_id = data.azurerm_kubernetes_cluster.aks_cluster.kubelet_identity[0].client_id
+  load_balancer_dns_label_name = "lb-${random_uuid.test.result}"
+  kubelet_client_id            = data.azurerm_kubernetes_cluster.aks_cluster.kubelet_identity[0].client_id
 }
 
 
@@ -77,8 +21,8 @@ locals {
 resource "kubernetes_manifest" "www-certificate" {
   manifest = yamldecode(templatefile(
     "${path.module}/certificate.yaml", {
-      "name"            = "www"
-      "namespace"       = "default"
+      "name"            = "www-tls"
+      "namespace"       = var.namespace
       "common_name"     = "www.${var.domain}"
       "dns_name"        = "www.${var.domain}"
       "issuer_ref_name" = "letsencrypt-staging"
@@ -89,8 +33,8 @@ resource "kubernetes_manifest" "www-certificate" {
 resource "kubernetes_manifest" "root-certificate" {
   manifest = yamldecode(templatefile(
     "${path.module}/certificate.yaml", {
-      "name"            = "root"
-      "namespace"       = "default"
+      "name"            = "root-tls"
+      "namespace"       = var.namespace
       "common_name"     = var.domain
       "dns_name"        = var.domain
       "issuer_ref_name" = "letsencrypt-staging"
@@ -110,13 +54,19 @@ resource "azurerm_dns_cname_record" "www" {
 }
 
 # data of service helloweb
+# data "kubernetes_service" "helloweb" {
+#   metadata {
+#     name      = "helloweb"
+#     namespace = "default"
+#   }
+# }
 
-data "kubernetes_service" "helloweb" {
-  metadata {
-    name      = "helloweb"
-    namespace = "default"
-  }
-}
+# data "kubernetes_service" "ingress-nginx-controller" {
+#   metadata {
+#     name      = "ingress-nginx-controller"
+#     namespace = "ingress-basic"
+#   }
+# }
 
 resource "azurerm_dns_a_record" "root" {
   name                = "@"
@@ -125,7 +75,9 @@ resource "azurerm_dns_a_record" "root" {
 
   ttl = 3600
 
-  records = [data.kubernetes_service.helloweb.status[0].load_balancer[0].ingress[0].ip]
+  # records = [data.kubernetes_service.helloweb.status[0].load_balancer[0].ingress[0].ip]
+  records = [azurerm_public_ip.loadbalancer_public_ip.ip_address]
+  # records = [data.kubernetes_service.ingress-nginx-controller.status[0].load_balancer[0].ingress[0].ip]
 }
 
 # data for azurerm_role_assignment cert_manager_identity_dns_zone_contributor
@@ -140,7 +92,7 @@ resource "kubernetes_manifest" "clusterissuer-lets-encrypt-staging" {
       "resource_group_name" = var.resource_group_name
       "subscription_id"     = var.subscription_id
       "domain"              = var.domain
-      "identity_client_id"  = local.user_assigned_identity_client_id
+      "kubelet_client_id"   = local.kubelet_client_id
     }
   ))
 }
@@ -151,25 +103,54 @@ resource "kubernetes_manifest" "clusterissuer-lets-encrypt-production" {
       "resource_group_name" = var.resource_group_name
       "subscription_id"     = var.subscription_id
       "domain"              = var.domain
-      "identity_client_id"  = local.user_assigned_identity_client_id
+      "kubelet_client_id"   = local.kubelet_client_id
     }
   ))
 }
 
-# resource "kubernetes_manifest" "deployment" {
-#   manifest = yamldecode(templatefile(
-#     "${path.module}/deployment.yaml", {}
-#   ))
-# }
-
-# resource "kubernetes_manifest" "service" {
-#   manifest = yamldecode(templatefile(
-#     "${path.module}/service.yaml", {
-#       "dns_label_name" = local.load_balancer_dns_label_name
+# resource "kubernetes_service" "helloweb" {
+#   metadata {
+#     name = "helloweb"
+#     annotations = {
+#       "service.beta.kubernetes.io/azure-dns-label-name"               = local.load_balancer_dns_label_name
+#       "service.beta.kubernetes.io/azure-load-balancer-resource-group" = var.node_resource_group
 #     }
-#   ))
+#   }
+
+#   spec {
+#     selector = {
+#       app  = "hello"
+#       tier = "web"
+#     }
+
+#     type             = "LoadBalancer"
+#     load_balancer_ip = azurerm_public_ip.loadbalancer_public_ip.ip_address
+
+#     port {
+#       port        = 443
+#       target_port = 8443
+#       protocol    = "TCP"
+#     }
+#   }
 # }
 
+resource "azurerm_public_ip" "loadbalancer_public_ip" {
+  name                = "${var.name}-loadbalancer-ip"
+  location            = var.location
+  resource_group_name = var.node_resource_group
+  allocation_method   = "Static"
+  sku                 = "Standard"
+}
+
+# data "azurerm_resource_group" "node_resource_group" {
+#   name = var.node_resource_group
+# }
+
+# resource "azurerm_role_assignment" "network_contributor" {
+#   scope                = data.azurerm_resource_group.node_resource_group.id
+#   role_definition_name = "Network Contributor"
+#   principal_id         = data.azurerm_kubernetes_cluster.aks_cluster.kubelet_identity[0].object_id
+# }
 
 
 

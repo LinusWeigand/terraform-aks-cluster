@@ -16,4 +16,4 @@ spec:
           hostedZoneName: ${domain}
           environment: AzurePublicCloud
           managedIdentity:
-            clientID: ${identity_client_id}
+            clientID: ${kubelet_client_id}

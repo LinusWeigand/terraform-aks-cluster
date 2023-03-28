@@ -1,0 +1,2 @@
+How would in my aks cluster my Ingress look like if I want to route http traffic trough my static ip address to two different services? 
+The first service aks-helloworld-one should be accessible through /aks-helloworld-one and the second service aks-helloworld-two should be accessible through /aks-helloworld-two.

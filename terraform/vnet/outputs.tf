@@ -5,5 +5,3 @@ output "akssubnet_id" {
 # output "appgwsubnet_id" {
 #   value = azurerm_subnet.appgw_subnet.id
 # }
-
-

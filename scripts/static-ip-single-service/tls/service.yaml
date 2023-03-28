@@ -2,12 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   annotations:
-    service.beta.kubernetes.io/azure-load-balancer-resource-group: linus-node-rg
-    service.beta.kubernetes.io/azure-dns-label-name: lb-7d025dd8-8715-83d4-d06e-960c0ca6e751
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: $NODE_RESOURCE_GROUP
+    service.beta.kubernetes.io/azure-dns-label-name: $DNS_LABEL_NAME
   name: helloweb
   namespace: default
 spec:
-  loadBalancerIP: 4.184.96.94
+  loadBalancerIP: $LOAD_BALANCER_IP
   type: LoadBalancer
   ports:
     - port: 443

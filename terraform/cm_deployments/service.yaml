@@ -1,4 +1,3 @@
-This is my service yaml file: How can I redirect http to https using an ingress?
 
 apiVersion: v1
 kind: Service

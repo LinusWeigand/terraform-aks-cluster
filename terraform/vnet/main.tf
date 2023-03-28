@@ -21,13 +21,7 @@ resource "azurerm_subnet" "aks_subnet" {
 
 # Static ip address
 
-# resource "azurerm_public_ip" "appgw_public_ip" {
-#   name                = "${var.name}-appgw-ip"
-#   location            = var.location
-#   resource_group_name = var.resource_group_name
-#   allocation_method   = "Static"
-#   sku                 = "Standard"
-# }
+
 
 # DNS Zone
 # resource "azurerm_dns_zone" "dns_zone" {

@@ -5,7 +5,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   dns_prefix          = "${var.name}dns"
   kubernetes_version  = var.kubernetes_version
 
-  node_resource_group = "${var.name}-node-rg"
+  node_resource_group = var.node_resource_group
 
   linux_profile {
     admin_username = "ubuntu"
@@ -63,4 +63,13 @@ resource "azurerm_role_assignment" "dns_contributor" {
   role_definition_name             = "DNS Zone Contributor"
   principal_id                     = azurerm_kubernetes_cluster.cluster.kubelet_identity[0].object_id
   skip_service_principal_aad_check = true # Allows skipping propagation of identity to ensure assignment succeeds.
+}
+
+resource "azurerm_role_assignment" "network_contributor" {
+  scope                = data.azurerm_resource_group.node_resource_group.id
+  role_definition_name = "Network Contributor"
+  principal_id         = azurerm_kubernetes_cluster.cluster.kubelet_identity[0].object_id
+  depends_on = [
+    azurerm_kubernetes_cluster.cluster
+  ]
 }
