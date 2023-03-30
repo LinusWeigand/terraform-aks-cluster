@@ -1,7 +1,7 @@
 variable "name" {
   type        = string
   default     = "linus"
-  description = "Name for resources"
+  description = "Name for resources
 }
 
 variable "location" {

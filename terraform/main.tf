@@ -13,7 +13,7 @@ terraform {
     helm = {
       source  = "helm"
       version = "=2.8.0"
-    }
+     
 
     random = {
       source  = "hashicorp/random"
