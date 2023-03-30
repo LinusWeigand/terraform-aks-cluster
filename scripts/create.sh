@@ -15,7 +15,7 @@ CLUSTER="linusaks"
 # AZURE_SUBSCRIPTION="2a70cd88-34b2-4240-9c18-221c1564239d"
 # AZURE_SUBSCRIPTION_ID="2a70cd88-34b2-4240-9c18-221c1564239d"
 
-sh create-storage-account.sh 
+# sh create-storage-account.sh 
 
 # Navigate into terraform directory
 cd ..
