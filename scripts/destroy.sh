@@ -1,6 +1,3 @@
-#!/bin/sh
-
-AZURE_DEFAULTS_GROUP="linus-rg"
 USER_ASSIGNED_IDENTITY_NAME="cert-manager-identity" 
 
 # Navigate into terraform directory

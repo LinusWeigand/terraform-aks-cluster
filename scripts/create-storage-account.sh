@@ -1,5 +1,3 @@
-#!/bin/sh
-
 RESOURCE_GROUP_NAME="storage-resource-group"
 STORAGE_ACCOUNT_NAME="storageaccountlinus"
 
