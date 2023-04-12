@@ -73,3 +73,10 @@ resource "azurerm_role_assignment" "network_contributor" {
     azurerm_kubernetes_cluster.cluster
   ]
 }
+
+resource "azurerm_role_assignment" "acr_pull" {
+  principal_id                     = azurerm_kubernetes_cluster.cluster.kubelet_identity[0].object_id
+  role_definition_name             = "AcrPull"
+  skip_service_principal_aad_check = true
+  scope                            = var.container_registry_id
+}

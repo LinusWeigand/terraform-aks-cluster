@@ -79,6 +79,14 @@ module "vnet" {
 #   resource_group_name = var.resource_group_name
 # }
 
+# Container Registry
+module "container-registry" {
+  source              = "./container_registry"
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  client_id           = var.CLIENT_ID
+}
+
 # Kubernetes Cluster
 module "aks" {
   source                     = "./aks"
@@ -93,6 +101,8 @@ module "aks" {
   akssubnet_id               = module.vnet.akssubnet_id
   dns_zone_id                = var.dns_zone_id
   node_resource_group        = local.node_resource_group
+  container_registry_id      = module.container-registry.container_registry_id
+
 }
 #
 # module "cert-manager" {

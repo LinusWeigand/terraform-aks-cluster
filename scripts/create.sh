@@ -2,20 +2,13 @@
 Green='\033[0;32m'
 NC='\033[0m'
 
-AZURE_DEFAULTS_LOCATION="germanywestcentral"
-AZURE_DEFAULTS_GROUP="linus-rg"
-# DOMAIN_NAME="linusweigand.de"
-CLUSTER="linusaks"
 
 # USER_ASSIGNED_IDENTITY_NAME="cert-manager-identity"
 # SERVICE_ACCOUNT_NAME="cert-manager"
 # SERVICE_ACCOUNT_NAMESPACE="cert-manager" 
 
-# EMAIL_ADDRESS="linus@couchtec.com"
-# AZURE_SUBSCRIPTION="2a70cd88-34b2-4240-9c18-221c1564239d"
-# AZURE_SUBSCRIPTION_ID="2a70cd88-34b2-4240-9c18-221c1564239d"
 
-sh create-storage-account.sh 
+# sh create-storage-account.sh 
 
 # Navigate into terraform directory
 cd ..

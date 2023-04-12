@@ -39,3 +39,7 @@ variable "dns_zone_id" {
 variable "node_resource_group" {
   type = string
 }
+
+variable "container_registry_id" {
+  type = string
+}
