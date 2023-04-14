@@ -1,5 +1,3 @@
-USER_ASSIGNED_IDENTITY_NAME="cert-manager-identity" 
-
 # Navigate into terraform directory
 cd ..
 cd terraform
