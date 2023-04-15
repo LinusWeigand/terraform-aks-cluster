@@ -1,7 +1,6 @@
 # Navigate into terraform directory
 cd ..
 cd terraform
-# az identity delete --name $USER_ASSIGNED_IDENTITY_NAME
 
 terraform destroy -auto-approve
 
