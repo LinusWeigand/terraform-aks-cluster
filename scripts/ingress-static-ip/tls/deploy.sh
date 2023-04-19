@@ -1,12 +1,8 @@
 #!/bin/sh
 
-export DEFAULTS_LOCATION="germanywestcentral"
-export AZURE_DEFAULTS_GROUP="linus-rg"
-export CLUSTER="linusaks"
 export IP_ADDRESS_NAME="linus-loadbalancer-ip"
-export NAMESPACE="ingress-basic"
 export NODE_RESOURCE_GROUP=$(az aks show --name $CLUSTER --query nodeResourceGroup -o tsv)
-export NAMESPACE="ingress-basic"
+export NAMESPACE="keycloak"
 export DOMAIN_NAME="linusweigand.de"
 export LOAD_BALANCER_IP=$(az network public-ip show --resource-group $NODE_RESOURCE_GROUP --name $IP_ADDRESS_NAME --query ipAddress --output tsv)
 
