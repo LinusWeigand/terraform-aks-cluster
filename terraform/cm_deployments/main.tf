@@ -1,3 +1,9 @@
+resource "kubernetes_namespace" "namespace" {
+  metadata {
+    name = var.namespace
+
+  }
+}
 resource "random_uuid" "test" {}
 
 data "azurerm_kubernetes_cluster" "aks_cluster" {
@@ -53,21 +59,6 @@ resource "azurerm_dns_cname_record" "www" {
   record = "${local.load_balancer_dns_label_name}.${var.location}.cloudapp.azure.com"
 }
 
-# data of service helloweb
-# data "kubernetes_service" "helloweb" {
-#   metadata {
-#     name      = "helloweb"
-#     namespace = "default"
-#   }
-# }
-
-# data "kubernetes_service" "ingress-nginx-controller" {
-#   metadata {
-#     name      = "ingress-nginx-controller"
-#     namespace = "ingress-basic"
-#   }
-# }
-
 resource "azurerm_dns_a_record" "root" {
   name                = "@"
   zone_name           = var.domain
@@ -79,11 +70,6 @@ resource "azurerm_dns_a_record" "root" {
   records = [azurerm_public_ip.loadbalancer_public_ip.ip_address]
   # records = [data.kubernetes_service.ingress-nginx-controller.status[0].load_balancer[0].ingress[0].ip]
 }
-
-# data for azurerm_role_assignment cert_manager_identity_dns_zone_contributor
-# data "azurerm_role_definition" "cert_manager_identity_dns_zone_contributor" {
-#   name = "DNS Zone Contributor"
-# }
 
 resource "kubernetes_manifest" "clusterissuer-lets-encrypt-staging" {
   manifest = yamldecode(templatefile(
@@ -107,32 +93,6 @@ resource "kubernetes_manifest" "clusterissuer-lets-encrypt-production" {
     }
   ))
 }
-
-# resource "kubernetes_service" "helloweb" {
-#   metadata {
-#     name = "helloweb"
-#     annotations = {
-#       "service.beta.kubernetes.io/azure-dns-label-name"               = local.load_balancer_dns_label_name
-#       "service.beta.kubernetes.io/azure-load-balancer-resource-group" = var.node_resource_group
-#     }
-#   }
-
-#   spec {
-#     selector = {
-#       app  = "hello"
-#       tier = "web"
-#     }
-
-#     type             = "LoadBalancer"
-#     load_balancer_ip = azurerm_public_ip.loadbalancer_public_ip.ip_address
-
-#     port {
-#       port        = 443
-#       target_port = 8443
-#       protocol    = "TCP"
-#     }
-#   }
-# }
 
 resource "azurerm_public_ip" "loadbalancer_public_ip" {
   name                = "${var.name}-loadbalancer-ip"
