@@ -3,10 +3,6 @@ variable "resource_group_name" {
   description = "Resource Group Name"
 }
 
-variable "kubernetes_cluster_rbac_enabled" {
-  default = "true"
-}
-
 variable "kubernetes_version" {
 }
 
