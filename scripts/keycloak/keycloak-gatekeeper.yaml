@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-gatekeeper
+  labels:
+    app: keycloak-gatekeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak-gatekeeper
+  template:
+    metadata:
+      labels:
+        app: keycloak-gatekeeper
+    spec:
+      containers:
+        - name: keycloak-gatekeeper
+          image: keycloak/keycloak-gatekeeper:latest
+          command:
+            - "/opt/keycloak-gatekeeper/keycloak-gatekeeper"
+            - "--config=/opt/keycloak-gatekeeper/config.yaml"
+          env:
+            - name: PROXY_ADDR
+              value: ":3000"
+          volumeMounts:
+            - name: config-volume
+              mountPath: /opt/keycloak-gatekeeper/
+          ports:
+            - containerPort: 3000
+              name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-gatekeeper
+  labels:
+    app: keycloak-gatekeeper
+spec:
+  type: LoadBalancer
+  selector:
+    app: keycloak-gatekeeper
+  ports:
+    - port: 80
+      targetPort: 3000
+      name: http
+
