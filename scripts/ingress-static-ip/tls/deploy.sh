@@ -26,7 +26,6 @@ az network dns record-set a add-record \
     --record-set-name "*" \
     --ipv4-address $LOAD_BALANCER_IP
 
-kubectl apply -f cluster-issuer.yaml --namespace $NAMESPACE
 kubectl apply -f aks-helloworld-one.yaml --namespace $NAMESPACE
 kubectl apply -f aks-helloworld-two.yaml --namespace $NAMESPACE
 kubectl apply -f hello-world-ingress.yaml --namespace $NAMESPACE
