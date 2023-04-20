@@ -104,37 +104,44 @@ module "aks" {
   container_registry_id      = module.container-registry.container_registry_id
 
 }
-#
-# module "cert-manager" {
-#   source               = "./cm"
-#   resource_group_name  = var.resource_group_name
-#   cert_manager_version = "v1.11.0"
-#   domain               = var.domain
-#   cluster_name         = local.cluster_name
-#   location             = var.location
-#
-#   depends_on = [
-#     module.aks,
-#   ]
-# }
-#
-# module "cert-manager-deployments" {
-#   source              = "./cm_deployments"
-#  resource_group_name = var.resource_group_name
-#  domain              = var.domain
-#  email               = var.email
-#  subscription_id     = var.SUBSCRIPTION_ID
-#  location            = var.location
-#  cluster_name        = local.cluster_name
-#  node_resource_group = local.node_resource_group
-#  name                = var.name
-#  namespace           = "ingress-basic"
-#
-#  depends_on = [
-#    module.cert-manager
-#  ]
-#}
 
+module "cert-manager" {
+  source               = "./cm"
+  resource_group_name  = var.resource_group_name
+  cert_manager_version = "v1.11.0"
+  domain               = var.domain
+  cluster_name         = local.cluster_name
+  location             = var.location
+
+  depends_on = [
+    module.aks,
+  ]
+}
+
+module "cert-manager-deployments" {
+  source              = "./cm_deployments"
+  resource_group_name = var.resource_group_name
+  domain              = var.domain
+  email               = var.email
+  subscription_id     = var.SUBSCRIPTION_ID
+  location            = var.location
+  cluster_name        = local.cluster_name
+  node_resource_group = local.node_resource_group
+  name                = var.name
+  namespace           = "ingress-basic"
+
+  depends_on = [
+    module.cert-manager
+  ]
+}
+
+module "api-management" {
+  source              = "./api_management"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  name                = var.name
+  email               = var.email
+}
 # module "ingress-controller" {
 #   source              = "./ing_controller"
 #   resource_group_name = var.resource_group_name
