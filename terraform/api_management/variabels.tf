@@ -13,3 +13,7 @@ variable "resource_group_name" {
 variable "email" {
   type = string
 }
+
+variable "domain" {
+  type = string
+}
