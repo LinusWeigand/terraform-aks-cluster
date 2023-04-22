@@ -12,20 +12,3 @@ resource "azurerm_subnet" "aks_subnet" {
   address_prefixes     = [var.aks_subnet_address_prefix]
 }
 
-# resource "azurerm_subnet" "appgw_subnet" {
-#   name                 = var.subnet_address_name
-#   resource_group_name  = var.resource_group_name
-#   virtual_network_name = azurerm_virtual_network.virtual_network.name
-#   address_prefixes     = [var.subnet_address_prefix]
-# }
-
-# Static ip address
-
-
-
-# DNS Zone
-# resource "azurerm_dns_zone" "dns_zone" {
-#   name                = var.domain
-#   resource_group_name = var.resource_group_name
-# }
-
