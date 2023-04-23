@@ -26,8 +26,18 @@ resource "azurerm_api_management_api" "apimapi" {
 
   authentication_settings {
     openid {
+}
 
     }
+resource "azurerm_api_management_openid_connect_provider" "keycloak_oidc_provider" {
+  name                = "keycloak-oidc-provider"
+  resource_group_name = var.resource_group_name
+  api_management_name = azurerm_api_management.apim.name
+  metadata_endpoint   = "https://keycloak.example.com/auth/realms/my-realm/.well-known/openid-configuration"
+  client_id           = var.client_id
+  client_secret       = var.client_secret
+  redirect_uri        = ["https://www.linusweigand.de/callback"]
+  scope               = ["openid", "profile", "email"]
   }
 
 }
