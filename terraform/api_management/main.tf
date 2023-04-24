@@ -38,6 +38,15 @@ resource "azurerm_api_management_openid_connect_provider" "keycloak_oidc_provide
   client_secret       = var.client_secret
   redirect_uri        = ["https://www.linusweigand.de/callback"]
   scope               = ["openid", "profile", "email"]
+resource "azurerm_api_management_backend_pool" "backend_pool" {
+  name                = "backend-pool"
+  resource_group_name = var.resource_group_name
+  api_management_name = azurerm_api_management.apim.name
+  backend {
+    url      = "https://my-backend-url.com"
+    protocol = "https"
   }
+}
+
 
 }
