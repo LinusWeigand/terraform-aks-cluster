@@ -1,5 +1,5 @@
 variable "name" {
-  type = string 
+  type = string
 }
 
 variable "location" {
@@ -15,5 +15,17 @@ variable "email" {
 }
 
 variable "domain" {
+  type = string
+}
+
+variable "subnet_id" {
+  type = string
+}
+
+variable "client_id" {
+  type = string
+}
+
+variable "client_secret" {
   type = string
 }

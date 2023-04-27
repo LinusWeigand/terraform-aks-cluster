@@ -7,12 +7,13 @@ resource "azurerm_api_management" "apim" {
 
   sku_name = "Developer_1"
 
-  hostname_configuration {
-    type     = "Proxy"
-    hostname = var.domain
-    certificate {
-      # TODO  
-    }
+  identity {
+    type = "SystemAssigned"
+  }
+
+  virtual_network_type = "Internal"
+  virtual_network_configuration {
+    subnet_id = var.subnet_id
   }
 }
 
@@ -23,12 +24,15 @@ resource "azurerm_api_management_api" "apimapi" {
   display_name        = "Api Management Api"
   path                = "test"
   protocols           = ["https"]
+  revision            = "1"
 
-  authentication_settings {
-    openid {
+  openid_connect_provider_id = azurerm_api_management_openid_connect_provider.keycloak_oidc_provider.id
+  authorization_server_id    = azurerm_api_management_authorization_server.keycloak_authorization_server.id
+  backend {
+    backend_url = azurerm_api_management_backend_pool.backend_pool.backend[0].url
+  }
 }
 
-    }
 resource "azurerm_api_management_openid_connect_provider" "keycloak_oidc_provider" {
   name                = "keycloak-oidc-provider"
   resource_group_name = var.resource_group_name
@@ -38,6 +42,8 @@ resource "azurerm_api_management_openid_connect_provider" "keycloak_oidc_provide
   client_secret       = var.client_secret
   redirect_uri        = ["https://www.linusweigand.de/callback"]
   scope               = ["openid", "profile", "email"]
+}
+
 resource "azurerm_api_management_backend_pool" "backend_pool" {
   name                = "backend-pool"
   resource_group_name = var.resource_group_name
