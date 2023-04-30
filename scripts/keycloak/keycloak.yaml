@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,6 +23,10 @@ spec:
               value: admin
             - name: KEYCLOAK_PASSWORD
               value: admin
+            - name: KEYCLOAK_FRONTEND_URL
+              value: "https://linusweigand.de"
+            - name: PROXY_ADDRESS_FORWARDING
+              value: "true"
           ports:
             - containerPort: 8080
               name: http
@@ -35,7 +40,7 @@ metadata:
   labels:
     app: keycloak
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: keycloak
   ports:

@@ -45,3 +45,7 @@ variable "dns_zone_id" {
   type    = string
   default = "/subscriptions/2a70cd88-34b2-4240-9c18-221c1564239d/resourceGroups/linus-rg/providers/Microsoft.Network/dnszones/linusweigand.de"
 }
+
+variable "KEYCLOAK_ADMIN_PASSWORD" {
+  type = string
+}

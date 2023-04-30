@@ -19,7 +19,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     name                 = "agentpool"
     node_count           = var.agent_count
     vm_size              = var.vm_size
-    vnet_subnet_id       = var.akssubnet_id
+    vnet_subnet_id       = var.subnet_id
     type                 = "VirtualMachineScaleSets"
     orchestrator_version = var.kubernetes_version
   }

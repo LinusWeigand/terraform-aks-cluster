@@ -34,7 +34,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: aks-helloworld-one
+            name: keycloak
             port:
               number: 80
 ---
