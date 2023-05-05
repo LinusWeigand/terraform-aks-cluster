@@ -8,7 +8,7 @@ NC='\033[0m'
 # SERVICE_ACCOUNT_NAMESPACE="cert-manager" 
 
 
-# sh create-storage-account.sh 
+sh create-storage-account.sh 
 
 # Navigate into terraform directory
 cd ..
