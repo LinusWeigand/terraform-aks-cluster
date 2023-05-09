@@ -104,19 +104,19 @@ module "aks" {
 
 }
 
-# module "cert-manager" {
+module "cert-manager" {
+
+  resource_group_name  = var.resource_group_name
+  cert_manager_version = "v1.11.0"
+  domain               = var.domain
+  cluster_name         = local.cluster_name
+  location             = var.location
+
+  depends_on = [
+    module.aks,
+  ]
+}
 #
-#   resource_group_name  = var.resource_group_name
-#   cert_manager_version = "v1.11.0"
-#   domain               = var.domain
-#   cluster_name         = local.cluster_name
-#   location             = var.location
-#
-#   depends_on = [
-#     module.aks,
-#   ]
-# }
-# #
 # module "cert-manager-deployments" {
 #   source              = "./cm_deployments"
 #   resource_group_name = var.resource_group_name
