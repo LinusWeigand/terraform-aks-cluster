@@ -134,18 +134,18 @@ module "cert-manager-deployments" {
   ]
 }
 
-# module "api-management" {
-#   source              = "./api_management"
-#   resource_group_name = var.resource_group_name
-#   location            = var.location
-#   name                = var.name
-#   email               = var.email
-#   domain              = var.domain
-#   subnet_id           = module.vnet.subnet_id
-#   client_id           = var.CLIENT_ID
-#   client_secret       = var.CLIENT_SECRET
-# }
-#
+module "api-management" {
+  source              = "./api_management"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  name                = var.name
+  email               = var.email
+  domain              = var.domain
+  subnet_id           = module.vnet.subnet_id
+  client_id           = var.CLIENT_ID
+  client_secret       = var.CLIENT_SECRET
+}
+
 # module "keycloak" {
 #   source                  = "./keycloa/helm"
 #   keycloak_admin_password = var.KEYCLOAK_ADMIN_PASSWORD
