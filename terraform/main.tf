@@ -146,11 +146,11 @@ module "api-management" {
   client_secret       = var.CLIENT_SECRET
 }
 
-module "keycloak" {
-  source                  = "./keycloa/helm"
-  keycloak_admin_password = var.KEYCLOAK_ADMIN_PASSWORD
-  namespace               = "ingress-basic"
-}
+# module "keycloak" {
+#   source                  = "./keycloa/helm"
+#   keycloak_admin_password = var.KEYCLOAK_ADMIN_PASSWORD
+#   namespace               = "ingress-basic"
+# }
 
 # module "ingress-controller" {
 #   source              = "./ing_controller"
