@@ -117,22 +117,22 @@ module "cert-manager" {
   ]
 }
 
-module "cert-manager-deployments" {
-  source              = "./cm_deployments"
-  resource_group_name = var.resource_group_name
-  domain              = var.domain
-  email               = var.email
-  subscription_id     = var.SUBSCRIPTION_ID
-  location            = var.location
-  cluster_name        = local.cluster_name
-  node_resource_group = local.node_resource_group
-  name                = var.name
-  namespace           = "ingress-basic"
-
-  depends_on = [
-    module.cert-manager
-  ]
-}
+# module "cert-manager-deployments" {
+#   source              = "./cm_deployments"
+#   resource_group_name = var.resource_group_name
+#   domain              = var.domain
+#   email               = var.email
+#   subscription_id     = var.SUBSCRIPTION_ID
+#   location            = var.location
+#   cluster_name        = local.cluster_name
+#   node_resource_group = local.node_resource_group
+#   name                = var.name
+#   namespace           = "ingress-basic"
+#
+#   depends_on = [
+#     module.cert-manager
+#   ]
+# }
 
 # module "api-management" {
 #   source              = "./api_management"
